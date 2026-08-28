@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SkillConnect
+
+SkillConnect is the frontend for the SIH 2026 solution to **Problem Statement 44: Portal for Academia-Industry Collaboration for Skill Mapping, Internships and Placement**.
+
+The platform is designed to connect students, industries, academicians and institutions through verified skills, targeted assessments, skill-gap insights, internship opportunities and application tracking.
+
+## Current Frontend
+
+The current experience is a responsive student workspace built with Next.js, TypeScript and Tailwind CSS. It includes:
+
+- Student dashboard with skill readiness, progress snapshots and opportunity matches
+- My Skills view with categorized skill cards, verification states and skill-gap actions
+- Chart.js readiness doughnut and technical skill radar visualizations
+- Assessments overview with available, in-progress and completed states
+- Mock assessment flow: overview, multiple-choice questions, progress, submission and results
+- Responsive sidebar navigation and mobile menu behavior
+
+All displayed data is realistic mock data for the frontend phase. Backend APIs, authentication, Supabase, AI/ML recommendations and persistent assessment results are intentionally not implemented yet.
+
+## Tech Stack
+
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Chart.js with `react-chartjs-2` (for Data Visualization)
+- ESLint
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in a browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev       # Start the development server
+npm run lint      # Run ESLint
+npm run build     # Create a production build
+npm run start     # Start the production server
+```
 
-## Learn More
+## Frontend Routes
 
-To learn more about Next.js, take a look at the following resources:
+| Route | Purpose |
+| --- | --- |
+| `/` | Student dashboard |
+| `/skills` | Skill profile, readiness and skill gaps |
+| `/assessments` | Assessment library and assessment-taking flow |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```text
+app/
+  page.tsx                 Student dashboard
+  skills/page.tsx          My Skills experience
+  assessments/page.tsx     Assessments experience
+  globals.css              Shared design tokens and global styles
+  layout.tsx               Root layout and metadata
+public/                    Static assets
+```
 
-## Deploy on Vercel
+## Product Direction
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+SkillConnect will eventually support API-backed skill profiles, institution and industry workflows, verified assessment records, internship and job matching, application tracking and structured industry feedback. The current frontend keeps these boundaries data-driven so real services can be connected without redesigning the user experience.

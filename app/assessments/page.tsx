@@ -26,7 +26,7 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
   return <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8">{paths[name]}</svg>;
 }
 
-const navigation = [["Dashboard", "grid", "/"], ["My Skills", "spark", "/skills"], ["Assessments", "clipboard", "/assessments"], ["Opportunities", "briefcase", "#"], ["Applications", "file", "#"], ["Portfolio", "user", "#"]] as const;
+const navigation = [["Dashboard", "grid", "/"], ["My Skills", "spark", "/skills"], ["Assessments", "clipboard", "/assessments"], ["Opportunities", "briefcase", "/opportunities"], ["Applications", "file", "#"], ["Portfolio", "user", "#"]] as const;
 
 type Assessment = { id: string; skill: string; category: string; difficulty: string; questions: number; time: string; status: "Not started" | "In progress" | "Completed"; score?: number; color: string; mark: string; description: string };
 

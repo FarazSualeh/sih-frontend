@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { roleOptions } from "@/lib/mock-data/admin-dashboard";
 
-export function RoleSwitcher({ currentRole = "student" }: { currentRole?: "student" | "academician" | "industry" | "admin" }) {
+export function RoleSwitcher({ currentRole = "student" }: { currentRole?: "student" | "admin" }) {
   const router = useRouter();
 
   return (

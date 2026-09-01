@@ -16,7 +16,7 @@ import {
   Sparkle,
 } from "lucide-react";
 
-export type RoleKey = "student" | "academician" | "industry" | "admin";
+export type RoleKey = "student" | "admin";
 
 export type SidebarItem = {
   title: string;
@@ -52,8 +52,6 @@ export type QuickAction = {
 
 export const roleOptions: Array<{ value: RoleKey; label: string; route: string }> = [
   { value: "student", label: "Student", route: "/" },
-  { value: "academician", label: "Academician", route: "/academician" },
-  { value: "industry", label: "Industry", route: "/industry" },
   { value: "admin", label: "Admin", route: "/admin" },
 ];
 

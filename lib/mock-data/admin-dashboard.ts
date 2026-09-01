@@ -12,7 +12,6 @@ import {
   ClipboardCheck,
   Building2,
   CircleDashed,
-  ArrowUpRight,
   Activity,
   Sparkle,
 } from "lucide-react";

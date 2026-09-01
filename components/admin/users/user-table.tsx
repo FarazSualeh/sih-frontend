@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -76,7 +75,7 @@ export function UserTable<T>({
                 <TableRow key={index} className="align-middle hover:bg-slate-50/70">
                   {columns.map((column) => (
                     <TableCell key={String(column.key)} className={column.className ?? "text-slate-700"}>
-                      {column.render ? column.render(row) : (row as any)[column.key as keyof T]}
+                      {column.render ? column.render(row) : String((row as Record<string, unknown>)[String(column.key)] ?? "")}
                     </TableCell>
                   ))}
                   {onView ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BriefcaseBusiness, Building2, GraduationCap, Users } from "lucide-react";
+import { Building2, GraduationCap, Users } from "lucide-react";
 
 import { UserDetailDialog, StatusBadge } from "@/components/admin/users/user-detail-dialog";
 import { UserFilters } from "@/components/admin/users/user-filters";
@@ -253,14 +253,14 @@ export default function AdminUsersPage() {
               ? "Academicians"
               : "Industries"
         }
-        rows={tableRows as any[]}
-        columns={selectedColumns as any[]}
+        rows={tableRows as unknown as Array<Student | Academician | Industry>}
+        columns={selectedColumns as unknown as Array<{ key: string; label: string; render?: (row: Student | Academician | Industry) => React.ReactNode; className?: string }>}
         onView={
           activeTab === "students"
-            ? (row) => setSelectedStudent(row as unknown as Student)
+            ? (row) => setSelectedStudent(row as Student)
             : activeTab === "academicians"
-              ? (row) => setSelectedAcademician(row as unknown as Academician)
-              : (row) => setSelectedIndustry(row as unknown as Industry)
+              ? (row) => setSelectedAcademician(row as Academician)
+              : (row) => setSelectedIndustry(row as Industry)
         }
       />
 

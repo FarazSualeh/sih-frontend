@@ -1,4 +1,4 @@
-import { Activity, ArrowUpRight, BellRing, ChartNoAxesCombined, ClipboardCheck, Sparkles } from "lucide-react";
+import { ArrowUpRight, BellRing, ChartNoAxesCombined, ClipboardCheck, Sparkles } from "lucide-react";
 
 import { KpiCard } from "@/components/admin/kpi-card";
 import { SectionHeader } from "@/components/admin/section-header";

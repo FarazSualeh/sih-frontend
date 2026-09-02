@@ -27,7 +27,7 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
 }
 
 const navigation = [
-  ["Dashboard", "grid", "/"], ["My Skills", "spark", "/skills"], ["Assessments", "clipboard", "/assessments"], ["Opportunities", "briefcase", "/opportunities"], ["Applications", "file", "/applications"], ["Portfolio", "user", "#"],
+  ["Dashboard", "grid", "/"], ["My Skills", "spark", "/skills"], ["Assessments", "clipboard", "/assessments"], ["Opportunities", "briefcase", "/opportunities"], ["Applications", "file", "/applications"], ["Portfolio", "user", "/portfolio"],
 ] as const;
 
 const skills = [

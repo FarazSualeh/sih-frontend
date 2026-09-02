@@ -51,7 +51,7 @@ export function AdminNavbar() {
                   if (route) router.push(route);
                 }}
               >
-                {roleOptions.map((option) => (
+                {roleOptions.filter((option) => option.value === "student" || option.value === "admin").map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>

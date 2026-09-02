@@ -19,7 +19,7 @@ export function RoleSwitcher({ currentRole = "student" }: { currentRole?: "stude
         }}
         className="appearance-none rounded-xl border border-line bg-white px-3 py-2 pr-8 text-sm font-medium text-ink outline-none focus:border-coral"
       >
-        {roleOptions.map((option) => (
+        {roleOptions.filter((option) => option.value === "student" || option.value === "admin").map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

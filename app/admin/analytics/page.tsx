@@ -1,21 +1,35 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
+import { ArrowDownToLine, Award, BarChart3, BriefcaseBusiness, ClipboardCheck, Download, Gauge, Target, TrendingUp, Users } from "lucide-react";
+import { AnalyticsKpiCard } from "@/components/admin/analytics/analytics-kpi-card";
+import { ApplicationTrendChart } from "@/components/admin/analytics/application-trend-chart";
+import { AssessmentCompletionChart } from "@/components/admin/analytics/assessment-completion-chart";
+import { DepartmentPerformanceChart } from "@/components/admin/analytics/department-performance-chart";
+import { DemandVsProficiencyChart } from "@/components/admin/analytics/demand-vs-proficiency-chart";
+import { InsightCard } from "@/components/admin/analytics/insight-card";
+import { PlacementFunnelChart } from "@/components/admin/analytics/placement-funnel-chart";
+import { ReadinessDistributionChart } from "@/components/admin/analytics/readiness-distribution-chart";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { assessmentCompletion, aiRecommendations, dashboardMetrics, departmentPerformance, demandVsProficiency, industryInsights, monthlyApplications, placementFunnel, readinessDistribution, skillGapInsights, topInDemandSkills } from "@/lib/mock-data/analytics";
+
+const iconMap = { gauge: Gauge, briefcase: BriefcaseBusiness, clipboard: ClipboardCheck, arrow: TrendingUp, target: Target, users: Users };
 
 export default function AdminAnalyticsPage() {
-  return (
-    <div className="mx-auto max-w-7xl">
-      <div className="mb-6">
-        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted">Administration</p>
-        <h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.06em] text-ink">Analytics</h1>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Engagement and trend analytics</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm leading-6 text-muted">This section can later show funnel metrics, conversion insights, readiness trends, and platform health charts.</p>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  return <div className="mx-auto max-w-7xl space-y-8 pb-10"><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-indigo-600">Administration / Intelligence</p><h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.06em] text-ink">Platform Analytics</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-muted">Track skill readiness, industry demand, assessments and placement outcomes across the SkillConnect ecosystem.</p></div><div className="flex flex-wrap gap-2"><Button variant="outline"><Download className="h-4 w-4" />Export Analytics</Button><Button><ArrowDownToLine className="h-4 w-4" />Download Report</Button></div></div>
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{dashboardMetrics.map((metric) => { const Icon = iconMap[metric.icon as keyof typeof iconMap]; return <AnalyticsKpiCard key={metric.title} {...metric} icon={Icon} />; })}</div>
+    <ChartCard title="Student Readiness Distribution" description="Students grouped by their latest readiness assessment."><ReadinessDistributionChart {...readinessDistribution} /><p className="mt-4 border-t border-line pt-4 text-sm text-muted">10,694 students assessed. <span className="font-semibold text-emerald-600">94% are at or above developing readiness.</span></p></ChartCard>
+    <ChartCard title="Industry Demand vs Student Proficiency" description="Visible gaps highlight where targeted learning paths can improve placement readiness."><DemandVsProficiencyChart points={demandVsProficiency} /></ChartCard>
+    <div className="grid gap-6 lg:grid-cols-2"><ChartCard title="Assessment Completion" description="Progress across all active learning assessments."><AssessmentCompletionChart {...assessmentCompletion} completion="69.6%" /></ChartCard><ChartCard title="Placement Funnel" description="Conversion from application through placement."><PlacementFunnelChart {...placementFunnel} /></ChartCard></div>
+    <div className="grid gap-6 lg:grid-cols-2"><ChartCard title="Department Placement Performance" description="Placement rate by academic department."><DepartmentPerformanceChart points={departmentPerformance} /><div className="mt-4 flex items-center gap-2 border-t border-line pt-4 text-sm"><Award className="h-4 w-4 text-amber-500" /><span className="text-muted">Highest department:</span><Badge variant="success">AI & DS · 88%</Badge></div></ChartCard><ChartCard title="Monthly Application Trend" description="Applications received from January through August."><ApplicationTrendChart {...monthlyApplications} /></ChartCard></div>
+    <section><SectionTitle eyebrow="Readiness signals" title="Skill gap insights" /><div className="grid gap-4 md:grid-cols-3">{skillGapInsights.map((item) => <Card key={item.skill} className="p-5"><div className="flex items-center justify-between"><BarChart3 className="h-5 w-5 text-orange-500" /><Badge variant="warning">{item.demandScore}% demand</Badge></div><p className="mt-5 font-semibold text-ink">{item.skill}</p><p className="mt-1 text-sm text-muted">{item.studentsAffected.toLocaleString()} students affected</p><div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-orange-400" style={{ width: `${item.demandScore}%` }} /></div></Card>)}</div></section>
+    <section><SectionTitle eyebrow="Market demand" title="Top in-demand skills" /><div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{topInDemandSkills.map((item) => <Card key={item.skill} className="p-4"><div className="flex items-center gap-3"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-sm font-bold text-indigo-700">{item.rank}</span><div className="min-w-0 flex-1"><p className="font-semibold text-ink">{item.skill}</p><p className="text-xs text-muted">{item.companies} companies requesting</p></div><p className="text-lg font-semibold text-indigo-700">{item.demandScore}%</p></div><div className="mt-4 grid grid-cols-2 gap-2 border-t border-line pt-3 text-xs"><span className="text-muted">Student coverage <strong className="text-ink">{item.coverage}%</strong></span><span className="text-right text-muted">Gap <strong className="text-orange-600">{item.gap}%</strong></span></div></Card>)}</div></section>
+    <section><SectionTitle eyebrow="Industry performance" title="Industry hiring insights" /><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">{industryInsights.map((item) => <Card key={item.company} className="p-5"><div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-xs font-bold text-indigo-700">{item.company.slice(0, 3).toUpperCase()}</div><p className="mt-4 font-semibold text-ink">{item.company}</p><Metric label="Open opportunities" value={item.opportunities.toString()} /><Metric label="Applications" value={item.applications.toLocaleString()} /><Metric label="Selection rate" value={item.selectionRate} /><div className="mt-3 border-t border-line pt-3 text-xs"><span className="text-muted">Internship conversion </span><strong className="text-emerald-600">{item.internshipConversion}</strong></div></Card>)}</div></section>
+    <section><SectionTitle eyebrow="AI recommendations" title="Signals worth acting on" /><div className="grid gap-4 md:grid-cols-2">{aiRecommendations.map((item) => <InsightCard key={item.title} {...item} />)}</div></section>
+  </div>;
 }
+
+function ChartCard({ title, description, children }: { title: string; description: string; children: React.ReactNode }) { return <Card className="p-5 sm:p-6"><div className="mb-5"><h2 className="text-xl font-semibold tracking-tight text-ink">{title}</h2><p className="mt-1 text-sm text-muted">{description}</p></div><div className="h-72">{children}</div></Card>; }
+function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) { return <div className="mb-4"><p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-indigo-600">{eyebrow}</p><h2 className="mt-1 text-2xl font-semibold tracking-tight text-ink">{title}</h2></div>; }
+function Metric({ label, value }: { label: string; value: string }) { return <div className="mt-3 flex justify-between text-xs"><span className="text-muted">{label}</span><span className="font-semibold text-ink">{value}</span></div>; }

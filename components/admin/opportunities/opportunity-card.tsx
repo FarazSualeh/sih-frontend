@@ -1,0 +1,9 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import type { Opportunity } from "@/lib/mock-data/opportunities";
+import { ApprovalStatusBadge } from "@/components/admin/opportunities/approval-status-badge";
+
+export function OpportunityCard({ opportunity, onView, onApprove, onReject }: { opportunity: Opportunity; onView: (opportunity: Opportunity) => void; onApprove: (opportunity: Opportunity) => void; onReject: (opportunity: Opportunity) => void }) {
+  return <Card className="p-4 transition-transform duration-200 hover:-translate-y-1 hover:shadow-md"><div className="flex items-start gap-3"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-xs font-bold text-indigo-700">{opportunity.company.logo}</div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-start justify-between gap-2"><div><p className="font-semibold text-ink">{opportunity.title}</p><p className="mt-1 text-xs text-muted">{opportunity.company.name} · {opportunity.location}</p></div><ApprovalStatusBadge status={opportunity.status} /></div><div className="mt-3 flex flex-wrap gap-1.5">{opportunity.skills.map((skill) => <Badge key={skill} variant="default" className="normal-case tracking-normal">{skill}</Badge>)}</div><div className="mt-4 flex items-center justify-between gap-2"><span className="text-xs text-muted">{opportunity.salary} · {opportunity.openings} openings</span><div className="flex gap-1"><Button size="sm" variant="ghost" onClick={() => onView(opportunity)}>Preview</Button><Button size="sm" onClick={() => onApprove(opportunity)}>Approve</Button><Button size="sm" variant="outline" onClick={() => onReject(opportunity)}>Reject</Button></div></div></div></div></Card>;
+}

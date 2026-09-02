@@ -1,0 +1,6 @@
+import { CalendarDays, Clock3 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import type { UpcomingAssessment } from "@/lib/mock-data/assessments";
+import { AssessmentStatusBadge } from "@/components/admin/assessments/assessment-status-badge";
+export function AssessmentCard({ assessment, onView }: { assessment: UpcomingAssessment; onView: (assessment: UpcomingAssessment) => void }) { return <Card className="p-5 transition hover:-translate-y-1 hover:shadow-md"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-ink">{assessment.name}</p><p className="mt-1 text-xs text-muted">{assessment.department} · {assessment.assignedStudents} students</p></div><AssessmentStatusBadge status={assessment.status} /></div><div className="mt-5 flex flex-wrap gap-3 text-xs text-muted"><span className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{assessment.scheduledDate}</span><span className="flex items-center gap-1.5"><Clock3 className="h-3.5 w-3.5" />{assessment.duration} min</span></div><Button size="sm" variant="outline" className="mt-4" onClick={() => onView(assessment)}>View Details</Button></Card>; }

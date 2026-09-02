@@ -1,0 +1,13 @@
+"use client";
+
+import { MoreHorizontal } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ProficiencyBar } from "@/components/admin/skills/proficiency-bar";
+import type { Skill } from "@/lib/mock-data/skills";
+
+export function SkillsTable({ skills, onView, onEdit, onAction }: { skills: Skill[]; onView: (skill: Skill) => void; onEdit: (skill: Skill) => void; onAction: (skill: Skill, action: string) => void }) {
+  return <Table><TableHeader className="sticky top-0 z-10 bg-white"><TableRow><TableHead>Skill name</TableHead><TableHead>Category</TableHead><TableHead>Industry demand</TableHead><TableHead>Student proficiency</TableHead><TableHead>Students tagged</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader><TableBody>{skills.map((skill) => <TableRow key={skill.id}><TableCell><button className="font-semibold text-indigo-700 hover:underline" onClick={() => onView(skill)}>{skill.name}</button></TableCell><TableCell><span className="text-muted">{skill.category}</span></TableCell><TableCell><div className="flex items-center gap-2"><span className="font-semibold">{skill.demandScore}</span><span className="text-xs text-muted">/ 100</span></div></TableCell><TableCell><ProficiencyBar value={skill.proficiencyScore} /></TableCell><TableCell>{skill.studentsTagged.toLocaleString()}</TableCell><TableCell><Badge variant={skill.status === "Deprecated" ? "danger" : skill.status === "Emerging" ? "info" : skill.status === "In Demand" ? "warning" : "success"}>{skill.status}</Badge></TableCell><TableCell><details className="relative text-right"><summary className="inline-flex list-none"><Button variant="ghost" size="icon" aria-label={`Actions for ${skill.name}`}><MoreHorizontal className="h-4 w-4" /></Button></summary><div className="absolute right-0 z-20 mt-1 w-44 rounded-xl border border-line bg-white p-1 text-left shadow-lg">{["View Details", "Edit Skill", "Mark In Demand", "Mark Emerging", "Disable Skill"].map((action) => <button key={action} className="block w-full rounded-lg px-3 py-2 text-left text-xs text-ink hover:bg-slate-50" onClick={() => action === "View Details" ? onView(skill) : action === "Edit Skill" ? onEdit(skill) : onAction(skill, action)}>{action}</button>)}</div></details></TableCell></TableRow>)}</TableBody></Table>;
+}

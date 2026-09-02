@@ -1,21 +1,32 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
+import { Bell, Building2, KeyRound, Palette, ShieldCheck, SlidersHorizontal, Users, Wrench } from "lucide-react";
+import { useState } from "react";
+import { ConfirmationDialog } from "@/components/admin/shared/confirmation-dialog";
+import { InstitutionSettingsForm } from "@/components/admin/settings/institution-settings-form";
+import { NotificationSettingsCard } from "@/components/admin/settings/notification-settings-card";
+import { RolePermissionTable } from "@/components/admin/settings/role-permission-table";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { institutionSettings, notificationSettings, permissions, platformSettings } from "@/lib/mock-data/settings";
+
+const tabs = [{ id: "institution", label: "Institution", icon: Building2 }, { id: "roles", label: "Roles & Permissions", icon: Users }, { id: "notifications", label: "Notifications", icon: Bell }, { id: "platform", label: "Platform", icon: SlidersHorizontal }, { id: "security", label: "Security", icon: ShieldCheck }, { id: "appearance", label: "Appearance", icon: Palette }];
 
 export default function AdminSettingsPage() {
-  return (
-    <div className="mx-auto max-w-7xl">
-      <div className="mb-6">
-        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted">Administration</p>
-        <h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.06em] text-ink">Settings</h1>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Platform settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm leading-6 text-muted">This section covers access control, workflow moderation, and platform-wide preferences for operators.</p>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  const [tab, setTab] = useState("institution");
+  const [confirm, setConfirm] = useState<"deactivate" | "reset">();
+  return <div className="mx-auto max-w-7xl space-y-8 pb-10">
+    <div><p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-indigo-600">Administration / Configuration</p><h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.06em] text-ink">Platform Settings</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-muted">Manage institution configuration, permissions, notifications and platform preferences.</p></div>
+    <div className="flex gap-2 overflow-x-auto border-b border-line pb-px">{tabs.map((item) => { const Icon = item.icon; return <button key={item.id} onClick={() => setTab(item.id)} className={`flex shrink-0 items-center gap-2 border-b-2 px-3 py-3 text-sm font-medium transition ${tab === item.id ? "border-indigo-600 text-indigo-700" : "border-transparent text-muted hover:text-ink"}`}><Icon className="h-4 w-4" />{item.label}</button>; })}</div>
+    {tab === "institution" && <SettingsSection title="Institution Settings" description="Keep the institution profile and academic context current."><InstitutionSettingsForm initial={institutionSettings} /></SettingsSection>}
+    {tab === "roles" && <SettingsSection title="Roles & Permissions" description="Configure access to platform workflows by role."><RolePermissionTable rows={permissions} /></SettingsSection>}
+    {tab === "notifications" && <SettingsSection title="Notification Settings" description="Choose which events receive attention across the admin team."><div className="grid gap-3 md:grid-cols-2">{notificationSettings.map((setting) => <NotificationSettingsCard key={setting.title} setting={setting} />)}</div><div className="mt-6 border-t border-line pt-5"><p className="text-sm font-semibold text-ink">Delivery channels</p><div className="mt-3 grid gap-3 md:grid-cols-3">{["Email Notifications", "Push Notifications", "In-App Notifications"].map((name) => <NotificationSettingsCard key={name} setting={{ title: name, description: "Use this channel for enabled alerts.", enabled: name !== "Push Notifications" }} />)}</div></div></SettingsSection>}
+    {tab === "platform" && <SettingsSection title="Platform Configuration" description="Set defaults for assessment, application, catalogue, and profile workflows."><div className="grid gap-3 md:grid-cols-2">{platformSettings.map((setting) => <NotificationSettingsCard key={setting.title} setting={setting} />)}<ConfigCard title="Assessment Defaults" value="60 minutes" /><ConfigCard title="Application Window" value="Open year-round" /><ConfigCard title="Placement Cycle" value="2026-27" /><ConfigCard title="Skill Catalogue Visibility" value="Verified users" /></div></SettingsSection>}
+    {tab === "security" && <SettingsSection title="Security Settings" description="Review access safeguards and sensitive platform controls."><div className="grid gap-4 md:grid-cols-2">{[["Admin sessions", "3 active sessions"], ["Password policy", "Strong · 12 characters minimum"], ["2FA enabled", "Required for administrators"], ["Last login", "Today · 09:42 from Bengaluru"]].map(([title, detail]) => <SecurityRow key={title} title={title} detail={detail} />)}</div><div className="mt-6 border-t border-line pt-5"><p className="font-semibold text-ink">Recent devices</p><p className="mt-2 text-sm text-muted">Windows desktop · Chrome · Current session</p><div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4"><p className="font-semibold text-red-800">Danger Zone</p><p className="mt-1 text-sm text-red-700">These actions require confirmation and affect the local demo state.</p><div className="mt-4 flex flex-wrap gap-2"><Button variant="outline" onClick={() => setConfirm("deactivate")}>Deactivate Admin Account</Button><Button variant="outline" onClick={() => setConfirm("reset")}>Reset Platform Demo Data</Button></div></div></div></SettingsSection>}
+    {tab === "appearance" && <SettingsSection title="Appearance Settings" description="Choose the visual theme and accent treatment for this workspace."><div className="grid gap-4 sm:grid-cols-3">{["Light", "Dark", "System"].map((theme) => <button key={theme} className={`rounded-xl border p-4 text-left transition hover:-translate-y-1 hover:shadow-md ${theme === "Light" ? "border-indigo-500 ring-2 ring-indigo-100" : "border-line"}`}><div className={`h-20 rounded-lg ${theme === "Dark" ? "bg-slate-900" : theme === "System" ? "bg-gradient-to-r from-white to-slate-800" : "bg-slate-100"}`} /><p className="mt-3 text-sm font-semibold text-ink">{theme}</p></button>)}</div><div className="mt-6"><p className="text-sm font-semibold text-ink">Accent colors</p><div className="mt-3 flex flex-wrap gap-3">{[["Blue", "bg-sky-500"], ["Indigo", "bg-indigo-600"], ["Emerald", "bg-emerald-500"], ["Orange", "bg-orange-500"], ["Purple", "bg-violet-600"]].map(([name, color]) => <button key={name} className="flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm text-ink"><span className={`h-4 w-4 rounded-full ${color}`} />{name}</button>)}</div></div></SettingsSection>}
+    <ConfirmationDialog open={Boolean(confirm)} onOpenChange={(open) => !open && setConfirm(undefined)} title={confirm === "reset" ? "Reset platform demo data?" : "Deactivate admin account?"} description={confirm === "reset" ? "This mock action would restore demo settings and records to their initial state." : "This mock action would end the current administrator session."} onConfirm={() => setConfirm(undefined)} />
+  </div>;
 }
+function SettingsSection({ title, description, children }: { title: string; description: string; children: React.ReactNode }) { return <Card className="p-5 sm:p-6"><div className="mb-5"><h2 className="text-xl font-semibold tracking-tight text-ink">{title}</h2><p className="mt-1 text-sm leading-6 text-muted">{description}</p></div>{children}</Card>; }
+function ConfigCard({ title, value }: { title: string; value: string }) { return <div className="rounded-xl border border-line p-4"><div className="flex items-center justify-between"><p className="text-sm font-medium text-ink">{title}</p><Wrench className="h-4 w-4 text-muted" /></div><p className="mt-3 text-sm font-semibold text-indigo-700">{value}</p></div>; }
+function SecurityRow({ title, detail }: { title: string; detail: string }) { return <div className="flex items-center justify-between rounded-xl border border-line p-4"><div><p className="text-sm font-medium text-ink">{title}</p><p className="mt-1 text-xs text-muted">{detail}</p></div><KeyRound className="h-4 w-4 text-indigo-600" /></div>; }

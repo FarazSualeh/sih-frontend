@@ -1,21 +1,43 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
+import { Award, CalendarDays, Check, Download, Inbox, ListChecks, Search, X } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ApplicationDialog } from "@/components/admin/opportunities/application-dialog";
+import { ApplicationTable } from "@/components/admin/opportunities/application-table";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { applicationFunnel, applications as initialApplications, companyInsights, type Application, type ApplicationStage } from "@/lib/mock-data/applications";
+
+const stageColumns = ["Applied", "Shortlisted", "Interview", "Selected", "Placed"];
+const stageMap: Record<string, ApplicationStage> = { Applied: "Applied", Shortlisted: "Shortlisted", Interview: "Interview Scheduled", Selected: "Selected", Placed: "Placed" };
+const iconMap = { inbox: Inbox, list: ListChecks, calendar: CalendarDays, check: Check, award: Award };
 
 export default function AdminApplicationsPage() {
-  return (
-    <div className="mx-auto max-w-7xl">
-      <div className="mb-6">
-        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted">Administration</p>
-        <h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.06em] text-ink">Applications</h1>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Application pipeline</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm leading-6 text-muted">Track student applications, industry responses, and application throughput by opportunity type.</p>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  const [items, setItems] = useState(initialApplications);
+  const [search, setSearch] = useState("");
+  const [department, setDepartment] = useState("All departments");
+  const [company, setCompany] = useState("All companies");
+  const [status, setStatus] = useState("All statuses");
+  const [placement, setPlacement] = useState("All placement statuses");
+  const [dateApplied, setDateApplied] = useState("Any date applied");
+  const [readiness, setReadiness] = useState("Any readiness");
+  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<Application>();
+  const [open, setOpen] = useState(false);
+  const filtered = useMemo(() => items.filter((item) => `${item.studentName} ${item.company} ${item.opportunity}`.toLowerCase().includes(search.toLowerCase()) && (department === "All departments" || item.department === department) && (company === "All companies" || item.company === company) && (status === "All statuses" || item.stage === status) && (placement === "All placement statuses" || item.placementStatus === placement) && (dateApplied === "Any date applied" || item.appliedDate.startsWith("Aug")) && (readiness === "Any readiness" || (readiness === "High (80%+)" ? item.readinessScore >= 80 : readiness === "Medium (60-79%)" ? item.readinessScore >= 60 && item.readinessScore < 80 : item.readinessScore < 60))), [items, search, department, company, status, placement, dateApplied, readiness]);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / 10));
+  const visible = filtered.slice((page - 1) * 10, page * 10);
+  const updateStage = (item: Application, action: string) => { const next: Record<string, ApplicationStage> = { Shortlist: "Shortlisted", "Schedule Interview": "Interview Scheduled", "Mark Selected": "Selected", "Mark Placed": "Placed", Reject: "Rejected" }; if (next[action]) setItems((current) => current.map((entry) => entry.id === item.id ? { ...entry, stage: next[action], placementStatus: next[action] === "Placed" ? "Placed" : next[action] === "Rejected" ? "Not Selected" : entry.placementStatus } : entry)); setOpen(false); };
+  const reset = () => { setSearch(""); setDepartment("All departments"); setCompany("All companies"); setStatus("All statuses"); setPlacement("All placement statuses"); setDateApplied("Any date applied"); setReadiness("Any readiness"); setPage(1); };
+  return <div className="mx-auto max-w-7xl space-y-8 pb-10"><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-indigo-600">Administration / Student outcomes</p><h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.06em] text-ink">Applications Management</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-muted">Track student applications from submission to placement.</p></div><Button variant="outline"><Download className="h-4 w-4" />Export Applications</Button></div>
+    <div className="grid gap-3 md:grid-cols-5">{applicationFunnel.map((item) => { const Icon = iconMap[item.icon as keyof typeof iconMap]; return <Card key={item.label} className="p-4"><div className="flex items-center justify-between"><span className="text-xs font-semibold uppercase tracking-[0.1em] text-muted">{item.label}</span><Icon className="h-4 w-4 text-indigo-600" /></div><p className="mt-3 text-2xl font-semibold tracking-tight text-ink">{item.value}</p><p className="mt-1 text-xs font-medium text-emerald-600">{item.conversion} conversion</p></Card>; })}</div>
+    <Card><div className="border-b border-line p-5"><div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center"><div><h2 className="text-xl font-semibold tracking-tight text-ink">Application pipeline</h2><p className="mt-1 text-sm text-muted">{filtered.length} applications matching your filters</p></div><div className="relative w-full lg:w-80"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" /><Input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Student name, company or opportunity" className="pl-9" /></div></div><div className="flex flex-wrap gap-2 pt-4"><Filter value={department} onChange={setDepartment} options={["All departments", ...new Set(items.map((item) => item.department))]} /><Filter value={company} onChange={setCompany} options={["All companies", ...new Set(items.map((item) => item.company))]} /><Filter value={status} onChange={setStatus} options={["All statuses", "Applied", "Under Review", "Shortlisted", "Interview Scheduled", "Selected", "Placed", "Rejected"]} /><Filter value={placement} onChange={setPlacement} options={["All placement statuses", "Seeking", "In Process", "Placed", "Not Selected"]} /><Filter value={dateApplied} onChange={setDateApplied} options={["Any date applied", "This week", "This month"]} /><Filter value={readiness} onChange={setReadiness} options={["Any readiness", "High (80%+)", "Medium (60-79%)", "Low (<60%)"]} /><Button variant="ghost" size="sm" onClick={reset}><X className="h-3.5 w-3.5" />Reset Filters</Button></div></div><div className="p-0"><ApplicationTable applications={visible} onView={(item) => { setSelected(item); setOpen(true); }} onAction={(item, action) => action === "View Details" ? (setSelected(item), setOpen(true)) : updateStage(item, action)} /><Pagination page={page} pageCount={pageCount} total={filtered.length} onPage={setPage} /></div></Card>
+    <section><SectionTitle eyebrow="Placement pipeline" title="Move students through outcomes" /><div className="grid gap-4 xl:grid-cols-5">{stageColumns.map((column) => <div key={column} className="min-h-48 rounded-2xl border border-line bg-slate-50/70 p-3"><div className="flex items-center justify-between"><p className="text-sm font-semibold text-ink">{column}</p><span className="rounded-full bg-white px-2 py-1 text-xs font-semibold text-muted">{items.filter((item) => item.stage === stageMap[column]).length}</span></div><div className="mt-3 space-y-2">{items.filter((item) => item.stage === stageMap[column]).slice(0, 3).map((item) => <button key={item.id} onClick={() => { setSelected(item); setOpen(true); }} className="w-full rounded-xl border border-line bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"><p className="text-sm font-semibold text-ink">{item.studentName}</p><p className="mt-1 text-xs text-muted">{item.company} · {item.department}</p><p className="mt-2 text-xs font-semibold text-indigo-700">{item.readinessScore}% readiness</p></button>)}</div></div>)}</div></section>
+    <section><SectionTitle eyebrow="Partner performance" title="Company application insights" /><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">{companyInsights.map((item) => <Card key={item.company} className="p-5"><div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-xs font-bold text-indigo-700">{item.company.slice(0, 3).toUpperCase()}</div><p className="mt-4 font-semibold text-ink">{item.company}</p><Metric label="Applications received" value={item.received.toLocaleString()} /><Metric label="Shortlisted" value={item.shortlisted.toLocaleString()} /><Metric label="Interviews" value={item.interviews.toLocaleString()} /><div className="mt-3 flex justify-between border-t border-line pt-3 text-xs"><span className="text-muted">Offers {item.offers}</span><span className="font-semibold text-emerald-600">{item.acceptance} accepted</span></div></Card>)}</div></section>
+    {selected && <ApplicationDialog application={selected} open={open} onOpenChange={setOpen} onAction={(action) => updateStage(selected, action)} />}</div>;
 }
+function Filter({ value, onChange, options }: { value: string; onChange: (value: string) => void; options: string[] }) { return <select value={value} onChange={(e) => onChange(e.target.value)} className="h-9 rounded-xl border border-line bg-white px-3 text-xs font-medium text-ink outline-none focus:ring-2 focus:ring-indigo-300">{options.map((option) => <option key={option}>{option}</option>)}</select>; }
+function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) { return <div className="mb-4"><p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-indigo-600">{eyebrow}</p><h2 className="mt-1 text-2xl font-semibold tracking-tight text-ink">{title}</h2></div>; }
+function Metric({ label, value }: { label: string; value: string }) { return <div className="mt-3 flex justify-between text-xs"><span className="text-muted">{label}</span><span className="font-semibold text-ink">{value}</span></div>; }
+function Pagination({ page, pageCount, total, onPage }: { page: number; pageCount: number; total: number; onPage: (page: number) => void }) { return <div className="flex items-center justify-between border-t border-line px-5 py-4"><p className="text-xs text-muted">Showing {total ? (page - 1) * 10 + 1 : 0}-{Math.min(page * 10, total)} of {total}</p><div className="flex gap-2"><Button size="sm" variant="outline" disabled={page === 1} onClick={() => onPage(page - 1)}>Previous</Button><Button size="sm" variant="outline" disabled={page === pageCount} onClick={() => onPage(page + 1)}>Next</Button></div></div>; }

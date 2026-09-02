@@ -1,0 +1,3 @@
+import { Inbox } from "lucide-react";
+import { Button } from "@/components/ui/button";
+export function EmptyState({ title, description, action, onAction }: { title: string; description: string; action?: string; onAction?: () => void }) { return <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line bg-white p-10 text-center"><div className="rounded-full bg-indigo-50 p-3 text-indigo-700"><Inbox className="h-5 w-5" /></div><h3 className="mt-4 font-semibold text-ink">{title}</h3><p className="mt-2 max-w-sm text-sm leading-6 text-muted">{description}</p>{action && <Button className="mt-5" onClick={onAction}>{action}</Button>}</div>; }

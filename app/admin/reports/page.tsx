@@ -1,21 +1,31 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
 
+import { ArrowDownToLine, BriefcaseBusiness, Building2, FileText, Plus, Target, X } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ConfirmationDialog } from "@/components/admin/shared/confirmation-dialog";
+import { InsightCard } from "@/components/admin/analytics/insight-card";
+import { ReportCard } from "@/components/admin/reports/report-card";
+import { ReportFilter } from "@/components/admin/reports/report-filter";
+import { ReportPreviewDialog } from "@/components/admin/reports/report-preview-dialog";
+import { ReportTable } from "@/components/admin/reports/report-table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { departmentReports, reportCategories, reportInsights, reportKpis, reports as initialReports, type Report } from "@/lib/mock-data/reports";
+
+const icons = { file: FileText, building: Building2, briefcase: BriefcaseBusiness, target: Target };
 export default function AdminReportsPage() {
-  return (
-    <div className="mx-auto max-w-7xl">
-      <div className="mb-6">
-        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted">Administration</p>
-        <h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.06em] text-ink">Reports</h1>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Generated reports</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm leading-6 text-muted">Use this dashboard to manage exports, compliance summaries, and operational reporting for the platform.</p>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  const [items, setItems] = useState(initialReports); const [search, setSearch] = useState(""); const [category, setCategory] = useState("All categories"); const [status, setStatus] = useState("All statuses"); const [format, setFormat] = useState("All formats"); const [selected, setSelected] = useState<Report>(); const [previewOpen, setPreviewOpen] = useState(false); const [deleteTarget, setDeleteTarget] = useState<Report>();
+  const filtered = useMemo(() => items.filter((item) => `${item.name} ${item.category}`.toLowerCase().includes(search.toLowerCase()) && (category === "All categories" || item.category === category) && (status === "All statuses" || item.status === status) && (format === "All formats" || item.format === format)), [items, search, category, status, format]);
+  const generate = (report?: Report) => { if (report) setItems((current) => current.map((item) => item.id === report.id ? { ...item, status: "Generating" } : item)); }; const reset = () => { setSearch(""); setCategory("All categories"); setStatus("All statuses"); setFormat("All formats"); };
+  return <div className="mx-auto max-w-7xl space-y-8 pb-10"><div className="sticky top-20 z-10 -mx-4 flex flex-col justify-between gap-5 border-b border-line bg-[#f8f8f5]/95 px-4 py-4 backdrop-blur sm:-mx-6 sm:flex-row sm:items-end sm:px-6 lg:-mx-8 lg:px-8"><div><p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-indigo-600">Administration / Reporting</p><h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.06em] text-ink">Reports & Insights</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-muted">Generate institutional reports for skill readiness, placements, assessments and industry demand.</p></div><div className="flex flex-wrap gap-2"><Button variant="outline"><ArrowDownToLine className="h-4 w-4" />Export CSV</Button><Button variant="outline"><FileText className="h-4 w-4" />Export PDF</Button><Button><Plus className="h-4 w-4" />Generate Report</Button></div></div>
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{reportKpis.map((item) => { const Icon = icons[item.icon as keyof typeof icons]; return <Card key={item.title} className="p-5 transition hover:-translate-y-1 hover:shadow-md"><div className="flex items-start justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.1em] text-muted">{item.title}</p><p className="mt-3 text-3xl font-semibold text-ink">{item.value}</p><p className="mt-2 text-xs font-semibold text-emerald-600">{item.trend}</p></div><div className={`rounded-xl p-3 text-white ${item.accent}`}><Icon className="h-5 w-5" /></div></div></Card>; })}</div>
+    <section><Title eyebrow="Report templates" title="Report Categories" /><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{reportCategories.map((item) => <ReportCard key={item.name} report={item} onGenerate={() => undefined} onPreview={() => { const match = items.find((report) => report.category === item.name); if (match) { setSelected(match); setPreviewOpen(true); } }} />)}</div></section>
+    <Card><div className="border-b border-line p-5"><div className="flex items-center justify-between gap-3"><div><h2 className="text-xl font-semibold tracking-tight text-ink">Generated reports</h2><p className="mt-1 text-sm text-muted">{filtered.length} report records</p></div><Button variant="ghost" size="sm" onClick={reset}><X className="h-3.5 w-3.5" />Reset Filters</Button></div><div className="mt-4"><ReportFilter search={search} category={category} status={status} format={format} onSearch={setSearch} onCategory={setCategory} onStatus={setStatus} onFormat={setFormat} /></div></div><div className="p-0"><ReportTable reports={filtered} onPreview={(report) => { setSelected(report); setPreviewOpen(true); }} onAction={(report, action) => action === "Delete" ? setDeleteTarget(report) : action === "Regenerate" ? generate(report) : undefined} /></div></Card>
+    <section><Title eyebrow="Institutional performance" title="Department Performance Report" /><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{departmentReports.map((item) => <Card key={item.department} className="p-5"><div className="flex items-start justify-between"><p className="font-semibold text-ink">{item.department}</p><Badge variant={item.placement >= 80 ? "success" : "warning"}>{item.placement}% placed</Badge></div><div className="mt-5 grid grid-cols-2 gap-3 text-sm"><Metric label="Students" value={item.students.toLocaleString()} /><Metric label="Avg readiness" value={`${item.readiness}%`} /><Metric label="Assessment completion" value={`${item.completion}%`} /><Metric label="Skill gaps" value={item.skillGaps.toString()} /></div><div className="mt-4 border-t border-line pt-3 text-xs text-muted">Top: <strong className="text-ink">{item.topSkill}</strong> · Weakest: <strong className="text-orange-600">{item.weakestSkill}</strong></div></Card>)}</div></section>
+    <section><Title eyebrow="AI recommendations" title="What the data suggests" /><div className="grid gap-4 md:grid-cols-2">{reportInsights.map((item) => <InsightCard key={item.title} {...item} />)}</div></section>
+    <ReportPreviewDialog report={selected} open={previewOpen} onOpenChange={setPreviewOpen} /><ConfirmationDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && setDeleteTarget(undefined)} title="Delete report?" description="This mock report record will be removed from the local report list." onConfirm={() => { if (deleteTarget) setItems((current) => current.filter((item) => item.id !== deleteTarget.id)); setDeleteTarget(undefined); }} />
+  </div>;
 }
+function Title({ eyebrow, title }: { eyebrow: string; title: string }) { return <div className="mb-4"><p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-indigo-600">{eyebrow}</p><h2 className="mt-1 text-2xl font-semibold tracking-tight text-ink">{title}</h2></div>; }
+function Metric({ label, value }: { label: string; value: string }) { return <div><p className="text-xs text-muted">{label}</p><p className="mt-1 font-semibold text-ink">{value}</p></div>; }

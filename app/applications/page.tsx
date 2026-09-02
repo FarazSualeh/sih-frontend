@@ -51,7 +51,7 @@ type Application = {
 
 const navigation = [
   ["Dashboard", "/"], ["My Skills", "/skills"], ["Assessments", "/assessments"],
-  ["Opportunities", "/opportunities"], ["Applications", "/applications"], ["Portfolio", "#"],
+  ["Opportunities", "/opportunities"], ["Applications", "/applications"], ["Portfolio", "/portfolio"],
 ] as const;
 
 const applications: Application[] = [

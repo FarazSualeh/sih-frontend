@@ -38,7 +38,7 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
   return <svg aria-hidden="true" fill="none" height={size} viewBox="0 0 24 24" width={size} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8">{paths[name]}</svg>;
 }
 
-const navigation = [["Dashboard", "grid", "/"], ["My Skills", "spark", "/skills"], ["Assessments", "clipboard", "/assessments"], ["Opportunities", "briefcase", "/opportunities"], ["Applications", "file", "#"], ["Portfolio", "user", "#"]] as const;
+const navigation = [["Dashboard", "grid", "/"], ["My Skills", "spark", "/skills"], ["Assessments", "clipboard", "/assessments"], ["Opportunities", "briefcase", "/opportunities"], ["Applications", "file", "/applications"], ["Portfolio", "user", "/portfolio"]] as const;
 
 type Skill = { name: string; score: number; status: "Verified" | "Assessed" | "Needs assessment"; level: string; category: "Technical" | "Soft skills" | "Domain skills"; color: string; detail: string };
 

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import {
-  Bell,
   BriefcaseBusiness,
   CalendarDays,
   Check,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 
 import { RoleSwitcher } from "@/components/role-switcher";
+import { StudentNotifications } from "@/components/student-notifications";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -145,6 +145,19 @@ const certifications = [
   },
 ];
 
+function getSavedResume() {
+  if (typeof window === "undefined") return null;
+  const savedResume = localStorage.getItem("skillconnect-resume");
+  if (!savedResume) return null;
+  try {
+    const parsedResume = JSON.parse(savedResume) as { name?: string; dataUrl?: string };
+    return parsedResume.name && parsedResume.dataUrl ? parsedResume : null;
+  } catch {
+    localStorage.removeItem("skillconnect-resume");
+    return null;
+  }
+}
+
 function Shell({
   children,
   menuOpen,
@@ -265,13 +278,7 @@ function Shell({
             >
               <Search />
             </button>
-            <button
-              aria-label="Notifications"
-              className="relative rounded-lg p-2 text-muted hover:bg-[#efefea]"
-            >
-              <Bell />
-              <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-coral" />
-            </button>
+            <StudentNotifications />
             <RoleSwitcher currentRole="student" />
             <div className="hidden items-center gap-2 border-l border-line pl-3 sm:flex sm:pl-5">
               <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-xs font-bold">
@@ -313,7 +320,7 @@ function PortfolioView() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [visible, setVisible] = useState(true);
   const [shared, setShared] = useState(false);
-  const [resumeName, setResumeNameState] = useState("Aarav_Sharma_Resume.pdf");
+  const [resumeName, setResumeNameState] = useState(() => getSavedResume()?.name ?? "Aarav_Sharma_Resume.pdf");
   const [summary, setSummary] = useState(
     "Frontend-focused IT student with experience in JavaScript, React, Next.js and SQL, interested in building practical web products.",
   );
@@ -321,6 +328,7 @@ function PortfolioView() {
   const [draftSummary, setDraftSummary] = useState(summary);
   const [draftLocation, setDraftLocation] = useState(location);
   const [resumeOpen, setResumeOpen] = useState(false);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(() => getSavedResume()?.dataUrl ?? null);
 
   const sharePortfolio = async () => {
     const url = "https://skillconnect.example/aarav-sharma";
@@ -330,19 +338,25 @@ function PortfolioView() {
   };
 
   const downloadResume = (fileName: string) => {
-    const file = new Blob([`Resume: ${fileName}\nAarav Sharma\n${summary}`], {
-      type: "application/pdf",
-    });
-    const url = URL.createObjectURL(file);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
-    link.click();
-    URL.revokeObjectURL(url);
+    const file = resumeUrl ? document.createElement("a") : null;
+    if (!file || !resumeUrl) return;
+    file.href = resumeUrl;
+    file.download = fileName;
+    file.click();
   };
 
-  const setResumeName = (fileName: string) => {
-    setResumeNameState(fileName);
+  const uploadResume = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result);
+      localStorage.setItem(
+        "skillconnect-resume",
+        JSON.stringify({ name: file.name, dataUrl }),
+      );
+      setResumeNameState(file.name);
+      setResumeUrl(dataUrl);
+    };
+    reader.readAsDataURL(file);
   };
 
   const openEditor = () => {
@@ -653,7 +667,7 @@ function PortfolioView() {
                   className="sr-only"
                   onChange={(event) =>
                     event.target.files?.[0] &&
-                    setResumeName(event.target.files[0].name)
+                    uploadResume(event.target.files[0])
                   }
                 />
               </label>
@@ -730,21 +744,61 @@ function PortfolioView() {
       <Dialog open={resumeOpen} onOpenChange={setResumeOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="font-display text-2xl">{resumeName}</DialogTitle>
-            <DialogDescription>Resume preview · updated 28 Aug 2026</DialogDescription>
+            <DialogTitle className="font-display text-2xl">
+              {resumeName}
+            </DialogTitle>
+            <DialogDescription>
+              Resume preview · updated 28 Aug 2026
+            </DialogDescription>
           </DialogHeader>
-          <div className="min-h-72 rounded-xl border border-line bg-[#f8f8f5] p-6 sm:p-8">
-            <p className="font-display text-2xl font-semibold">Aarav Sharma</p>
-            <p className="mt-1 text-sm text-muted">Frontend developer · Navi Mumbai, Maharashtra</p>
-            <div className="mt-6 border-t border-line pt-5">
-              <p className="eyebrow">Profile summary</p>
-              <p className="mt-2 text-sm leading-6 text-muted">{summary}</p>
-            </div>
-            <div className="mt-5 flex flex-wrap gap-2">{skills.map((skill) => <Badge key={skill.name} variant={skill.verified ? "success" : "default"}>{skill.name}</Badge>)}</div>
+          <div className="min-h-72 overflow-hidden rounded-xl border border-line bg-[#f8f8f5] p-2 sm:p-4">
+            {resumeUrl ? (
+              <iframe
+                title="Uploaded resume preview"
+                src={resumeUrl}
+                className="h-[62vh] min-h-96 w-full rounded-lg bg-white"
+              />
+            ) : (
+              <div className="grid min-h-72 place-items-center p-6 text-center text-sm text-muted">
+                Upload a PDF resume to preview it here.
+              </div>
+            )}
           </div>
+          {!resumeUrl && (
+            <div className="hidden">
+              <p className="font-display text-2xl font-semibold">
+                Aarav Sharma
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                Frontend developer · Navi Mumbai, Maharashtra
+              </p>
+              <div className="mt-6 border-t border-line pt-5">
+                <p className="eyebrow">Profile summary</p>
+                <p className="mt-2 text-sm leading-6 text-muted">{summary}</p>
+              </div>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <Badge
+                    key={skill.name}
+                    variant={skill.verified ? "success" : "default"}
+                  >
+                    {skill.name}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => downloadResume(resumeName)}><Download size={15} />Download</Button>
-            <DialogClose asChild><Button>Close preview</Button></DialogClose>
+            <Button
+              variant="outline"
+              onClick={() => downloadResume(resumeName)}
+            >
+              <Download size={15} />
+              Download
+            </Button>
+            <DialogClose asChild>
+              <Button>Close preview</Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

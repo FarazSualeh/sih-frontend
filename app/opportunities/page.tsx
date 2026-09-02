@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowRight, Bell, ChevronDown, Clock3, MapPin, Menu, Search, Sparkles, X } from "lucide-react";
 
-const navigation = [["Dashboard", "/"], ["My Skills", "/skills"], ["Assessments", "/assessments"], ["Opportunities", "/opportunities"], ["Applications", "/applications"], ["Portfolio", "#"]] as const;
+const navigation = [["Dashboard", "/"], ["My Skills", "/skills"], ["Assessments", "/assessments"], ["Opportunities", "/opportunities"], ["Applications", "/applications"], ["Portfolio", "/portfolio"]] as const;
 
 type Opportunity = {
   id: string; company: string; role: string; type: "Internship" | "Job"; location: string; mode: "Remote" | "Hybrid" | "On-site"; deadline: string; days: number; match: number; skills: string[]; missing: string[]; reason: string; color: string; mark: string; featured?: boolean;

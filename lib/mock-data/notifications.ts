@@ -1,2 +1,73 @@
-export interface Notification { id: string; title: string; detail: string; time: string; unread: boolean; tone: "info" | "success" | "warning"; }
-export const notifications: Notification[] = [{ id: "notification-1", title: "Infosys verification pending", detail: "An industry profile is waiting for review.", time: "10 min ago", unread: true, tone: "warning" }, { id: "notification-2", title: "Python assessment completed", detail: "152 students completed the latest assessment.", time: "35 min ago", unread: true, tone: "success" }, { id: "notification-3", title: "New report generated", detail: "Quarterly readiness report is ready to view.", time: "1 hour ago", unread: true, tone: "info" }, { id: "notification-4", title: "AWS skill demand increased", detail: "Industry demand is up 18% this month.", time: "2 hours ago", unread: false, tone: "info" }, { id: "notification-5", title: "Placement report exported", detail: "The FY26 placement pack was downloaded.", time: "Yesterday", unread: false, tone: "success" }];
+export type NotificationItem = {
+  id: string;
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+  type: 'info' | 'success' | 'warning';
+};
+
+export const notificationsSeed: NotificationItem[] = [
+  {
+    id: 'n1',
+    title: 'Assessment published',
+    message: 'Python Fundamentals Quiz is now live for students.',
+    time: '2 minutes ago',
+    read: false,
+    type: 'success',
+  },
+  {
+    id: 'n2',
+    title: 'Skill gap alert',
+    message: 'AWS proficiency is below target for 68 students in BSc-IT.',
+    time: '18 minutes ago',
+    read: false,
+    type: 'warning',
+  },
+  {
+    id: 'n3',
+    title: 'Opportunity match',
+    message: 'Nexa Labs internship matches 3 students in your cohort.',
+    time: '1 hour ago',
+    read: true,
+    type: 'info',
+  },
+];
+
+// Admin notification shape (different from academician notifications)
+export type AdminNotification = {
+  id: string;
+  title: string;
+  detail: string;
+  time: string;
+  unread: boolean;
+  tone: 'warning' | 'success' | 'info';
+};
+
+export const notifications: AdminNotification[] = [
+  {
+    id: 'an1',
+    title: 'New industry partner joined',
+    detail: 'TechCorp Innovations has completed verification.',
+    time: '5 minutes ago',
+    unread: true,
+    tone: 'success',
+  },
+  {
+    id: 'an2',
+    title: 'Skill gap threshold exceeded',
+    detail: 'AWS proficiency below 40% for 68 students — action needed.',
+    time: '20 minutes ago',
+    unread: true,
+    tone: 'warning',
+  },
+  {
+    id: 'an3',
+    title: 'Assessment cycle completed',
+    detail: '152 students finished the Python Fundamentals Quiz.',
+    time: '1 hour ago',
+    unread: false,
+    tone: 'info',
+  },
+];
+

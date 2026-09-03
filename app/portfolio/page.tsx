@@ -1,28 +1,20 @@
 "use client";
-
-import Link from "next/link";
+import { StudentLayout } from "@/components/student-layout";
 import { useState } from "react";
 import {
   BriefcaseBusiness,
   CalendarDays,
   Check,
-  ChevronDown,
   Code2,
   Download,
   ExternalLink,
   FileText,
   MapPin,
-  Menu,
   Pencil,
-  Search,
   Share2,
-  Sparkles,
   Upload,
-  X,
 } from "lucide-react";
 
-import { RoleSwitcher } from "@/components/role-switcher";
-import { StudentNotifications } from "@/components/student-notifications";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,14 +29,6 @@ import {
 
 const Github = Code2;
 
-const navigation = [
-  ["Dashboard", "/student-dashboard"],
-  ["My Skills", "/skills"],
-  ["Assessments", "/assessments"],
-  ["Opportunities", "/opportunities"],
-  ["Applications", "/applications"],
-  ["Portfolio", "/portfolio"],
-] as const;
 
 type Skill = {
   name: string;
@@ -133,7 +117,7 @@ const certifications = [
   },
   {
     name: "SQL for Data Analysis",
-    issuer: "Coursera · IBM",
+    issuer: "Coursera Â· IBM",
     date: "04 Aug 2026",
     credential: "Credential ID: IBM-SQL-4821",
   },
@@ -158,144 +142,7 @@ function getSavedResume() {
   }
 }
 
-function Shell({
-  children,
-  menuOpen,
-  setMenuOpen,
-}: {
-  children: React.ReactNode;
-  menuOpen: boolean;
-  setMenuOpen: (open: boolean) => void;
-}) {
-  return (
-    <div className="min-h-screen bg-[#f8f8f5] text-ink">
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-[258px] flex-col border-r border-line bg-[#fbfbf8] px-5 py-7 transition-transform duration-300 lg:translate-x-0 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
-      >
-        <div className="flex items-center justify-between px-3">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-coral text-white">
-              <Sparkles size={17} />
-            </span>
-            <span className="font-display text-[1.25rem] font-bold tracking-[-0.04em]">
-              skill<span className="text-coral">connect</span>
-            </span>
-          </Link>
-          <button
-            aria-label="Close navigation"
-            className="text-muted lg:hidden"
-            onClick={() => setMenuOpen(false)}
-          >
-            <X />
-          </button>
-        </div>
-        <div className="mt-12 px-3">
-          <p className="eyebrow mb-3">Workspace</p>
-          <nav className="space-y-1">
-            {navigation.map(([label, href]) => (
-              <Link
-                key={label}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-[0.92rem] font-medium transition ${label === "Portfolio" ? "bg-coral text-white shadow-[0_6px_14px_rgba(228,98,78,0.17)]" : "text-muted hover:bg-[#efefea] hover:text-ink"}`}
-              >
-                <span className="w-5 text-center">
-                  {label === "Dashboard"
-                    ? "⌂"
-                    : label === "My Skills"
-                      ? "✦"
-                      : label === "Assessments"
-                        ? "▣"
-                        : label === "Opportunities"
-                          ? "◆"
-                          : label === "Applications"
-                            ? "□"
-                            : "○"}
-                </span>
-                {label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <div className="mt-auto rounded-2xl bg-[#e9f0e8] p-4">
-          <div className="mb-3 grid h-8 w-8 place-items-center rounded-lg bg-olive text-white">
-            <Sparkles size={16} />
-          </div>
-          <p className="font-display text-[1rem] font-semibold">
-            Build your edge
-          </p>
-          <p className="mt-1 text-xs leading-5 text-muted">
-            Complete one assessment to unlock new matches.
-          </p>
-        </div>
-        <div className="mt-5 flex items-center gap-3 border-t border-line px-3 pt-5">
-          <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-sm font-bold">
-            AS
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">Aarav Sharma</p>
-            <p className="truncate text-xs text-muted">Student account</p>
-          </div>
-          <ChevronDown size={15} />
-        </div>
-      </aside>
-      {menuOpen && (
-        <button
-          aria-label="Close navigation overlay"
-          className="fixed inset-0 z-20 bg-ink/20 lg:hidden"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
-      <main className="lg:pl-[258px]">
-        <header className="flex min-h-[76px] items-center justify-between border-b border-line bg-[#fbfbf8]/80 px-5 py-3 backdrop-blur sm:px-8 lg:px-11">
-          <div className="flex items-center gap-3">
-            <button
-              aria-label="Open navigation"
-              className="rounded-lg p-2 text-muted hover:bg-[#efefea] lg:hidden"
-              onClick={() => setMenuOpen(true)}
-            >
-              <Menu />
-            </button>
-            <p className="hidden text-sm text-muted sm:block">
-              Saturday, 5 September 2026
-            </p>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-5">
-            <label className="relative hidden md:block">
-              <span className="sr-only">Search portfolio</span>
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-                size={16}
-              />
-              <input
-                placeholder="Search portfolio..."
-                className="h-10 w-56 rounded-xl border border-line bg-white pl-9 pr-3 text-sm outline-none transition placeholder:text-[#a3a49e] focus:border-coral lg:w-64"
-              />
-            </label>
-            <button
-              aria-label="Search portfolio"
-              className="rounded-lg p-2 text-muted hover:bg-[#efefea] md:hidden"
-            >
-              <Search />
-            </button>
-            <StudentNotifications />
-            <RoleSwitcher currentRole="student" />
-            <div className="hidden items-center gap-2 border-l border-line pl-3 sm:flex sm:pl-5">
-              <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-xs font-bold">
-                AS
-              </div>
-              <span className="text-sm font-semibold">Aarav Sharma</span>
-              <ChevronDown size={14} />
-            </div>
-          </div>
-        </header>
-        <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-11 lg:py-10">
-          {children}
-        </div>
-      </main>
-    </div>
-  );
-}
+
 
 function SectionHeading({
   eyebrow,
@@ -315,7 +162,6 @@ function SectionHeading({
 }
 
 function PortfolioView() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -372,7 +218,7 @@ function PortfolioView() {
   };
 
   return (
-    <Shell menuOpen={menuOpen} setMenuOpen={setMenuOpen}>
+    <StudentLayout>
       <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p className="eyebrow">Professional profile</p>
@@ -493,7 +339,7 @@ function PortfolioView() {
                 </p>
                 <p className="mt-3 flex items-center gap-1.5 text-xs text-muted">
                   <CalendarDays size={14} />
-                  Currently studying · 2024 - 2027
+                  Currently studying Â· 2024 - 2027
                 </p>
               </div>
             </div>
@@ -582,7 +428,7 @@ function PortfolioView() {
                     {certification.name}
                   </h3>
                   <p className="mt-1 text-xs text-muted">
-                    {certification.issuer} · {certification.date}
+                    {certification.issuer} Â· {certification.date}
                   </p>
                 </div>
                 <Badge
@@ -615,7 +461,7 @@ function PortfolioView() {
                   Frontend Developer Intern
                 </h3>
                 <p className="mt-1 text-sm font-semibold text-muted">
-                  Campus Labs · May 2026 - Jul 2026
+                  Campus Labs Â· May 2026 - Jul 2026
                 </p>
                 <p className="mt-3 text-sm leading-6 text-muted">
                   Built responsive React interfaces, collaborated with design
@@ -637,7 +483,7 @@ function PortfolioView() {
               <div>
                 <h3 className="font-semibold">{resumeName}</h3>
                 <p className="mt-1 text-xs text-muted">
-                  Uploaded · Last updated 28 Aug 2026
+                  Uploaded Â· Last updated 28 Aug 2026
                 </p>
               </div>
             </div>
@@ -748,7 +594,7 @@ function PortfolioView() {
               {resumeName}
             </DialogTitle>
             <DialogDescription>
-              Resume preview · updated 28 Aug 2026
+              Resume preview Â· updated 28 Aug 2026
             </DialogDescription>
           </DialogHeader>
           <div className="min-h-72 overflow-hidden rounded-xl border border-line bg-[#f8f8f5] p-2 sm:p-4">
@@ -770,7 +616,7 @@ function PortfolioView() {
                 Aarav Sharma
               </p>
               <p className="mt-1 text-sm text-muted">
-                Frontend developer · Navi Mumbai, Maharashtra
+                Frontend developer Â· Navi Mumbai, Maharashtra
               </p>
               <div className="mt-6 border-t border-line pt-5">
                 <p className="eyebrow">Profile summary</p>
@@ -834,10 +680,15 @@ function PortfolioView() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Shell>
+    </StudentLayout>
   );
 }
 
 export default function PortfolioPage() {
   return <PortfolioView />;
 }
+
+
+
+
+

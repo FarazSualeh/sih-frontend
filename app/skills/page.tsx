@@ -134,7 +134,7 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
 }
 
 const navigation = [
-  ["Dashboard", "grid", "/"],
+  ["Dashboard", "grid", "/student-dashboard"],
   ["My Skills", "spark", "/skills"],
   ["Assessments", "clipboard", "/assessments"],
   ["Opportunities", "briefcase", "/opportunities"],

@@ -1,70 +1,118 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 
 import { sidebarItems } from "@/lib/mock-data/admin-dashboard";
+import { useSidebar } from "@/components/sidebar-context";
 
 export function AdminSidebar() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter();
+  const { collapsed, mobileOpen, setMobileOpen, toggleCollapsed } = useSidebar();
+
+  const handleLogout = () => router.push("/login");
 
   return (
-    <aside
-      className={`hidden border-r border-line bg-[#fbfbf8] transition-all duration-300 lg:flex lg:flex-col ${
-        collapsed ? "w-24" : "w-[260px]"
-      }`}
-    >
-      <div className="flex items-center justify-between border-b border-line px-4 py-5">
-        {!collapsed && (
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-coral text-sm font-bold text-white">
-              SC
-            </div>
-            <div>
-              <p className="font-display text-lg font-semibold tracking-[-0.04em] text-ink">SkillConnect</p>
-            </div>
-          </div>
-        )}
-
+    <>
+      {/* Mobile overlay */}
+      {mobileOpen && (
         <button
-          type="button"
-          aria-label="Toggle sidebar"
-          className="ml-auto rounded-lg border border-line bg-white p-2 text-muted transition hover:bg-[#f5f5f2]"
-          onClick={() => setCollapsed((isCollapsed) => !isCollapsed)}
-        >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </button>
-      </div>
+          aria-label="Close sidebar"
+          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
 
-      <nav className="flex-1 space-y-1 px-3 py-4">
-        {sidebarItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r border-line bg-[#fbfbf8] transition-all duration-300
+          ${collapsed ? "w-[72px]" : "w-[260px]"}
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+      >
+        {/* Logo + toggle */}
+        <div className="flex items-center border-b border-line px-4 py-5 shrink-0 gap-2">
+          {collapsed ? (
+            <>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-coral text-sm font-bold text-white">
+                SC
+              </div>
+              <button
+                type="button"
+                aria-label="Expand sidebar"
+                className="ml-auto rounded-lg border border-line bg-white p-2 text-muted transition hover:bg-[#f5f5f2]"
+                onClick={toggleCollapsed}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-coral text-sm font-bold text-white">
+                SC
+              </div>
+              <p className="flex-1 font-display text-lg font-semibold tracking-[-0.04em] text-ink truncate">
+                SkillConnect
+              </p>
+              <button
+                type="button"
+                aria-label="Collapse sidebar"
+                className="rounded-lg border border-line bg-white p-2 text-muted transition hover:bg-[#f5f5f2]"
+                onClick={toggleCollapsed}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+            </>
+          )}
+        </div>
 
-          return (
-            <Link
-              key={item.title}
-              href={item.href}
-              className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
-                isActive
-                  ? "bg-coral text-white shadow-[0_10px_18px_rgba(228,98,78,0.18)]"
-                  : "text-muted hover:bg-[#eef0ea] hover:text-ink"
-              } ${collapsed ? "justify-center px-0" : ""}`}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              {!collapsed && <span className="truncate">{item.title}</span>}
-              {!collapsed && item.badge && (
-                <span className={`ml-auto rounded-full px-2 py-0.5 text-[0.62rem] ${isActive ? "bg-white/20 text-white" : "bg-[#eaece7] text-muted"}`}>
-                  {item.badge}
-                </span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-    </aside>
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto space-y-1 px-3 py-4">
+          {sidebarItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.title}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                title={collapsed ? item.title : undefined}
+                className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition
+                  ${collapsed ? "justify-center" : ""}
+                  ${isActive
+                    ? "bg-coral text-white shadow-[0_10px_18px_rgba(228,98,78,0.18)]"
+                    : "text-muted hover:bg-[#eef0ea] hover:text-ink"
+                  }`}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                {!collapsed && <span className="truncate">{item.title}</span>}
+                {!collapsed && item.badge && (
+                  <span
+                    className={`ml-auto rounded-full px-2 py-0.5 text-[0.62rem] ${
+                      isActive ? "bg-white/20 text-white" : "bg-[#eaece7] text-muted"
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Logout */}
+        <div className="border-t border-line px-3 py-4 shrink-0">
+          <button
+            onClick={handleLogout}
+            title={collapsed ? "Logout" : undefined}
+            className={`flex w-full items-center rounded-xl px-3 py-2.5 text-sm font-medium text-muted transition hover:bg-rose-50 hover:text-rose-600
+              ${collapsed ? "justify-center" : "gap-3"}`}
+          >
+            <LogOut className="h-4 w-4 shrink-0" />
+            {!collapsed && <span>Logout</span>}
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }

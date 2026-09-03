@@ -1,8 +1,6 @@
 "use client";
-
-import Link from "next/link";
+import { StudentLayout } from "@/components/student-layout";
 import { useMemo, useState } from "react";
-import { StudentNotifications } from "@/components/student-notifications";
 import { Doughnut, Radar } from "react-chartjs-2";
 import {
   ArcElement,
@@ -133,14 +131,6 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
   );
 }
 
-const navigation = [
-  ["Dashboard", "grid", "/student-dashboard"],
-  ["My Skills", "spark", "/skills"],
-  ["Assessments", "clipboard", "/assessments"],
-  ["Opportunities", "briefcase", "/opportunities"],
-  ["Applications", "file", "/applications"],
-  ["Portfolio", "user", "/portfolio"],
-] as const;
 
 type Skill = {
   name: string;
@@ -312,17 +302,13 @@ function SkillCard({ skill }: { skill: Skill }) {
 }
 
 export default function MySkillsPage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<"All" | Skill["category"]>("All");
+    const [category, setCategory] = useState<"All" | Skill["category"]>("All");
   const filteredSkills = useMemo(
     () =>
       skillData.filter(
-        (skill) =>
-          (category === "All" || skill.category === category) &&
-          skill.name.toLowerCase().includes(query.toLowerCase()),
+        (skill) => category === "All" || skill.category === category,
       ),
-    [category, query],
+    [category],
   );
   const skillGroups = ["Technical", "Soft skills", "Domain skills"] as const;
   const radarData = {
@@ -387,124 +373,8 @@ export default function MySkillsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f8f5] text-ink">
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-[258px] flex-col border-r border-line bg-[#fbfbf8] px-5 py-7 transition-transform duration-300 lg:translate-x-0 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
-      >
-        <div className="flex items-center justify-between px-3">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-coral text-white">
-              <Icon name="spark" size={17} />
-            </span>
-            <span className="font-display text-[1.25rem] font-bold tracking-[-0.04em]">
-              skill<span className="text-coral">connect</span>
-            </span>
-          </Link>
-          <button
-            aria-label="Close navigation"
-            className="text-muted lg:hidden"
-            onClick={() => setMenuOpen(false)}
-          >
-            <Icon name="close" />
-          </button>
-        </div>
-        <div className="mt-12 px-3">
-          <p className="eyebrow mb-3">Workspace</p>
-          <nav className="space-y-1">
-            {navigation.map(([label, icon, href]) => (
-              <Link
-                key={label}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-[0.92rem] font-medium transition ${label === "My Skills" ? "bg-coral text-white shadow-[0_6px_14px_rgba(228,98,78,0.17)]" : "text-muted hover:bg-[#efefea] hover:text-ink"}`}
-              >
-                <Icon name={icon} size={18} />
-                {label}
-                {label === "Opportunities" && (
-                  <span className="ml-auto rounded-full bg-[#e9ece7] px-2 py-0.5 text-[0.68rem] text-muted">
-                    12
-                  </span>
-                )}
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <div className="mt-auto rounded-2xl bg-[#e9f0e8] p-4">
-          <div className="mb-3 grid h-8 w-8 place-items-center rounded-lg bg-olive text-white">
-            <Icon name="spark" size={16} />
-          </div>
-          <p className="font-display text-[1rem] font-semibold">
-            Build your edge
-          </p>
-          <p className="mt-1 text-xs leading-5 text-muted">
-            Complete one assessment to unlock new matches.
-          </p>
-          <button className="mt-4 flex items-center text-xs font-bold text-olive">
-            Explore assessments <span className="ml-2">&rarr;</span>
-          </button>
-        </div>
-        <div className="mt-5 flex items-center gap-3 border-t border-line px-3 pt-5">
-          <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-sm font-bold">
-            AS
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">Aarav Sharma</p>
-            <p className="truncate text-xs text-muted">Student account</p>
-          </div>
-          <Icon name="chevron" size={15} />
-        </div>
-      </aside>
-      {menuOpen && (
-        <button
-          aria-label="Close navigation overlay"
-          className="fixed inset-0 z-20 bg-ink/20 lg:hidden"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
-      <main className="lg:pl-[258px]">
-        <header className="flex h-[76px] items-center justify-between border-b border-line bg-[#fbfbf8]/80 px-5 backdrop-blur sm:px-8 lg:px-11">
-          <div className="flex items-center gap-3">
-            <button
-              aria-label="Open navigation"
-              className="rounded-lg p-2 text-muted hover:bg-[#efefea] lg:hidden"
-              onClick={() => setMenuOpen(true)}
-            >
-              <Icon name="menu" />
-            </button>
-            <p className="hidden text-sm text-muted sm:block">
-              Saturday, 5 September 2026
-            </p>
-          </div>
-          <div className="flex items-center gap-3 sm:gap-5">
-            <label className="relative hidden md:block">
-              <span className="sr-only">Search skills</span>
-              <Icon name="search" size={17} />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search your skills..."
-                className="h-10 w-56 rounded-xl border border-line bg-white pl-9 pr-3 text-sm outline-none transition placeholder:text-[#a3a49e] focus:border-coral lg:w-64"
-              />
-            </label>
-            <button
-              aria-label="Search"
-              className="rounded-lg p-2 text-muted hover:bg-[#efefea] md:hidden"
-            >
-              <Icon name="search" />
-            </button>
-            <StudentNotifications />
-            <div className="flex items-center gap-2 border-l border-line pl-3 sm:pl-5">
-              <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-xs font-bold">
-                AS
-              </div>
-              <span className="hidden text-sm font-semibold sm:block">
-                Aarav Sharma
-              </span>
-              <Icon name="chevron" size={14} />
-            </div>
-          </div>
-        </header>
-        <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-11 lg:py-10">
+    <StudentLayout>
+      <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-11 lg:py-10">
           <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <div>
               <p className="eyebrow">Your capabilities</p>
@@ -608,11 +478,7 @@ export default function MySkillsPage() {
                     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                       {skillData
                         .filter(
-                          (skill) =>
-                            skill.category === group &&
-                            skill.name
-                              .toLowerCase()
-                              .includes(query.toLowerCase()),
+                          (skill) => skill.category === group,
                         )
                         .map((skill) => (
                           <SkillCard key={skill.name} skill={skill} />
@@ -659,7 +525,7 @@ export default function MySkillsPage() {
                               {skill.name}
                             </p>
                             <p className="mt-1 text-xs text-muted">
-                              Current score {skill.score}% · {skill.detail}
+                              Current score {skill.score}% Ãƒâ€šÃ‚Â· {skill.detail}
                             </p>
                           </div>
                         </div>
@@ -681,7 +547,7 @@ export default function MySkillsPage() {
                   {[
                     [
                       "Frontend foundations",
-                      "JavaScript · React",
+                      "JavaScript Ãƒâ€šÃ‚Â· React",
                       "86%",
                       "18 Aug 2026",
                       "bg-coral",
@@ -715,7 +581,7 @@ export default function MySkillsPage() {
                           {title}
                         </p>
                         <p className="mt-1 text-xs text-muted">
-                          {subtitle} · {date}
+                          {subtitle} Ãƒâ€šÃ‚Â· {date}
                         </p>
                       </div>
                       <p className="font-display text-lg font-bold text-olive">
@@ -747,7 +613,11 @@ export default function MySkillsPage() {
             </div>
           </section>
         </div>
-      </main>
-    </div>
+      </StudentLayout>
   );
 }
+
+
+
+
+

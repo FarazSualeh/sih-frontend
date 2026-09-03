@@ -1,23 +1,16 @@
 "use client";
-
-import Link from "next/link";
+import { StudentLayout } from "@/components/student-layout";
 import { useMemo, useState } from "react";
 import {
   ArrowRight,
   BriefcaseBusiness,
   CalendarDays,
   Check,
-  ChevronDown,
   Clock3,
   MapPin,
-  Menu,
-  Search,
-  Sparkles,
   X,
 } from "lucide-react";
 
-import { RoleSwitcher } from "@/components/role-switcher";
-import { StudentNotifications } from "@/components/student-notifications";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,14 +48,6 @@ type Application = {
   mark: string;
 };
 
-const navigation = [
-  ["Dashboard", "/student-dashboard"],
-  ["My Skills", "/skills"],
-  ["Assessments", "/assessments"],
-  ["Opportunities", "/opportunities"],
-  ["Applications", "/applications"],
-  ["Portfolio", "/portfolio"],
-] as const;
 
 const applications: Application[] = [
   {
@@ -217,150 +202,7 @@ function statusMatches(filter: Filter, status: Status) {
   return status === filter;
 }
 
-function AppShell({
-  children,
-  menuOpen,
-  setMenuOpen,
-  query,
-  setQuery,
-}: {
-  children: React.ReactNode;
-  menuOpen: boolean;
-  setMenuOpen: (open: boolean) => void;
-  query: string;
-  setQuery: (query: string) => void;
-}) {
-  return (
-    <div className="min-h-screen bg-[#f8f8f5] text-ink">
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-[258px] flex-col border-r border-line bg-[#fbfbf8] px-5 py-7 transition-transform duration-300 lg:translate-x-0 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
-      >
-        <div className="flex items-center justify-between px-3">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-coral text-white">
-              <Sparkles size={17} />
-            </span>
-            <span className="font-display text-[1.25rem] font-bold tracking-[-0.04em]">
-              skill<span className="text-coral">connect</span>
-            </span>
-          </Link>
-          <button
-            aria-label="Close navigation"
-            className="text-muted lg:hidden"
-            onClick={() => setMenuOpen(false)}
-          >
-            <X />
-          </button>
-        </div>
-        <div className="mt-12 px-3">
-          <p className="eyebrow mb-3">Workspace</p>
-          <nav className="space-y-1">
-            {navigation.map(([label, href]) => (
-              <Link
-                key={label}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-[0.92rem] font-medium transition ${label === "Applications" ? "bg-coral text-white shadow-[0_6px_14px_rgba(228,98,78,0.17)]" : "text-muted hover:bg-[#efefea] hover:text-ink"}`}
-              >
-                <span className="w-5 text-center">
-                  {label === "Dashboard"
-                    ? "⌂"
-                    : label === "My Skills"
-                      ? "✦"
-                      : label === "Assessments"
-                        ? "▣"
-                        : label === "Opportunities"
-                          ? "◆"
-                          : label === "Applications"
-                            ? "□"
-                            : "○"}
-                </span>
-                {label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <div className="mt-auto rounded-2xl bg-[#e9f0e8] p-4">
-          <div className="mb-3 grid h-8 w-8 place-items-center rounded-lg bg-olive text-white">
-            <Sparkles size={16} />
-          </div>
-          <p className="font-display text-[1rem] font-semibold">
-            Build your edge
-          </p>
-          <p className="mt-1 text-xs leading-5 text-muted">
-            Complete one assessment to unlock new matches.
-          </p>
-        </div>
-        <div className="mt-5 flex items-center gap-3 border-t border-line px-3 pt-5">
-          <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-sm font-bold">
-            AS
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">Aarav Sharma</p>
-            <p className="truncate text-xs text-muted">Student account</p>
-          </div>
-          <ChevronDown size={15} />
-        </div>
-      </aside>
-      {menuOpen && (
-        <button
-          aria-label="Close navigation overlay"
-          className="fixed inset-0 z-20 bg-ink/20 lg:hidden"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
-      <main className="lg:pl-[258px]">
-        <header className="flex min-h-[76px] items-center justify-between border-b border-line bg-[#fbfbf8]/80 px-5 py-3 backdrop-blur sm:px-8 lg:px-11">
-          <div className="flex items-center gap-3">
-            <button
-              aria-label="Open navigation"
-              className="rounded-lg p-2 text-muted hover:bg-[#efefea] lg:hidden"
-              onClick={() => setMenuOpen(true)}
-            >
-              <Menu />
-            </button>
-            <p className="hidden text-sm text-muted sm:block">
-              Saturday, 5 September 2026
-            </p>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-5">
-            <label className="relative hidden md:block">
-              <span className="sr-only">Search applications</span>
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-                size={16}
-              />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search applications..."
-                className="h-10 w-56 rounded-xl border border-line bg-white pl-9 pr-3 text-sm outline-none transition placeholder:text-[#a3a49e] focus:border-coral lg:w-64"
-              />
-            </label>
-            <button
-              aria-label="Search applications"
-              className="rounded-lg p-2 text-muted hover:bg-[#efefea] md:hidden"
-            >
-              <Search />
-            </button>
-            <StudentNotifications />
-            <RoleSwitcher currentRole="student" />
-            <div className="hidden items-center gap-2 border-l border-line pl-3 sm:flex sm:pl-5">
-              <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-xs font-bold">
-                AS
-              </div>
-              <span className="text-sm font-semibold">Aarav Sharma</span>
-              <ChevronDown size={14} />
-            </div>
-          </div>
-        </header>
-        <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-11 lg:py-10">
-          {children}
-        </div>
-      </main>
-    </div>
-  );
-}
+
 
 function ApplicationCard({
   application,
@@ -453,7 +295,7 @@ function Details({ application }: { application: Application }) {
           <p className="eyebrow">Opportunity</p>
           <p className="mt-2 font-semibold">{application.role}</p>
           <p className="mt-1 text-sm text-muted">
-            {application.type} · {application.mode}
+            {application.type} Â· {application.mode}
           </p>
         </div>
         <div>
@@ -487,7 +329,7 @@ function Details({ application }: { application: Application }) {
               className={`rounded-md px-2.5 py-1.5 text-xs font-medium ${application.missing.includes(skill) ? "bg-[#fff3d8] text-[#9d6d00]" : "bg-[#e9f0e8] text-olive"}`}
             >
               {skill}
-              {application.missing.includes(skill) && " · strengthen"}
+              {application.missing.includes(skill) && " Â· strengthen"}
             </span>
           ))}
           {application.missing
@@ -497,7 +339,7 @@ function Details({ application }: { application: Application }) {
                 key={skill}
                 className="rounded-md bg-[#fdeae7] px-2.5 py-1.5 text-xs font-medium text-[#b33d2d]"
               >
-                {skill} · missing
+                {skill} Â· missing
               </span>
             ))}
         </div>
@@ -550,20 +392,14 @@ function Details({ application }: { application: Application }) {
 }
 
 export default function ApplicationsPage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<Filter>("All");
+    const [filter, setFilter] = useState<Filter>("All");
   const [selected, setSelected] = useState<Application | null>(null);
   const filtered = useMemo(
     () =>
       applications.filter(
-        (application) =>
-          statusMatches(filter, application.status) &&
-          `${application.company} ${application.role}`
-            .toLowerCase()
-            .includes(query.toLowerCase()),
+        (application) => statusMatches(filter, application.status),
       ),
-    [filter, query],
+    [filter],
   );
   const filters: Filter[] = [
     "All",
@@ -573,12 +409,7 @@ export default function ApplicationsPage() {
     "Rejected",
   ];
   return (
-    <AppShell
-      menuOpen={menuOpen}
-      setMenuOpen={setMenuOpen}
-      query={query}
-      setQuery={setQuery}
-    >
+    <StudentLayout>
       <div className="mb-8">
         <p className="eyebrow">Application tracker</p>
         <h1 className="mt-2 font-display text-[2.25rem] font-semibold leading-[1.05] tracking-[-0.055em] sm:text-[2.75rem]">
@@ -674,7 +505,6 @@ export default function ApplicationsPage() {
             </p>
             <button
               onClick={() => {
-                setQuery("");
                 setFilter("All");
               }}
               className="mt-5 text-sm font-bold text-coral hover:text-ink"
@@ -697,7 +527,7 @@ export default function ApplicationsPage() {
                   {selected?.role}
                 </DialogTitle>
                 <DialogDescription className="mt-1">
-                  {selected?.company} · {selected?.type}
+                  {selected?.company} Â· {selected?.type}
                 </DialogDescription>
               </div>
               <DialogClose asChild>
@@ -717,6 +547,11 @@ export default function ApplicationsPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </AppShell>
+    </StudentLayout>
   );
 }
+
+
+
+
+

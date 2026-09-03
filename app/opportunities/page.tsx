@@ -1,27 +1,16 @@
 "use client";
-
+import { StudentLayout } from "@/components/student-layout";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { StudentNotifications } from "@/components/student-notifications";
 import {
   ArrowRight,
   ChevronDown,
   Clock3,
   MapPin,
-  Menu,
-  Search,
   Sparkles,
   X,
 } from "lucide-react";
 
-const navigation = [
-  ["Dashboard", "/student-dashboard"],
-  ["My Skills", "/skills"],
-  ["Assessments", "/assessments"],
-  ["Opportunities", "/opportunities"],
-  ["Applications", "/applications"],
-  ["Portfolio", "/portfolio"],
-] as const;
 
 type Opportunity = {
   id: string;
@@ -206,153 +195,7 @@ function SectionHeading({
   );
 }
 
-function Shell({
-  children,
-  menuOpen,
-  setMenuOpen,
-  query,
-  setQuery,
-}: {
-  children: React.ReactNode;
-  menuOpen: boolean;
-  setMenuOpen: (open: boolean) => void;
-  query: string;
-  setQuery: (query: string) => void;
-}) {
-  return (
-    <div className="min-h-screen bg-[#f8f8f5] text-ink">
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-[258px] flex-col border-r border-line bg-[#fbfbf8] px-5 py-7 transition-transform duration-300 lg:translate-x-0 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
-      >
-        <div className="flex items-center justify-between px-3">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-coral text-white">
-              <Sparkles size={17} />
-            </span>
-            <span className="font-display text-[1.25rem] font-bold tracking-[-0.04em]">
-              skill<span className="text-coral">connect</span>
-            </span>
-          </Link>
-          <button
-            aria-label="Close navigation"
-            className="text-muted lg:hidden"
-            onClick={() => setMenuOpen(false)}
-          >
-            <X />
-          </button>
-        </div>
-        <div className="mt-12 px-3">
-          <p className="eyebrow mb-3">Workspace</p>
-          <nav className="space-y-1">
-            {navigation.map(([label, href]) => (
-              <Link
-                key={label}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-[0.92rem] font-medium transition ${label === "Opportunities" ? "bg-coral text-white shadow-[0_6px_14px_rgba(228,98,78,0.17)]" : "text-muted hover:bg-[#efefea] hover:text-ink"}`}
-              >
-                <span className="w-5 text-center">
-                  {label === "Dashboard"
-                    ? "⌂"
-                    : label === "My Skills"
-                      ? "✦"
-                      : label === "Assessments"
-                        ? "▣"
-                        : label === "Opportunities"
-                          ? "◆"
-                          : label === "Applications"
-                            ? "□"
-                            : "○"}
-                </span>
-                {label}
-                {label === "Opportunities" && (
-                  <span className="ml-auto rounded-full bg-white/20 px-2 py-0.5 text-[0.68rem]">
-                    12
-                  </span>
-                )}
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <div className="mt-auto rounded-2xl bg-[#e9f0e8] p-4">
-          <div className="mb-3 grid h-8 w-8 place-items-center rounded-lg bg-olive text-white">
-            <Sparkles size={16} />
-          </div>
-          <p className="font-display text-[1rem] font-semibold">
-            Build your edge
-          </p>
-          <p className="mt-1 text-xs leading-5 text-muted">
-            Complete one assessment to unlock new matches.
-          </p>
-          <button className="mt-4 flex items-center text-xs font-bold text-olive">
-            Explore assessments <span className="ml-2">&rarr;</span>
-          </button>
-        </div>
-        <div className="mt-5 flex items-center gap-3 border-t border-line px-3 pt-5">
-          <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-sm font-bold">
-            AS
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">Aarav Sharma</p>
-            <p className="truncate text-xs text-muted">Student account</p>
-          </div>
-          <ChevronDown size={15} />
-        </div>
-      </aside>
-      {menuOpen && (
-        <button
-          aria-label="Close navigation overlay"
-          className="fixed inset-0 z-20 bg-ink/20 lg:hidden"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
-      <main className="lg:pl-[258px]">
-        <header className="flex h-[76px] items-center justify-between border-b border-line bg-[#fbfbf8]/80 px-5 backdrop-blur sm:px-8 lg:px-11">
-          <div className="flex items-center gap-3">
-            <button
-              aria-label="Open navigation"
-              className="rounded-lg p-2 text-muted hover:bg-[#efefea] lg:hidden"
-              onClick={() => setMenuOpen(true)}
-            >
-              <Menu />
-            </button>
-            <p className="hidden text-sm text-muted sm:block">
-              Saturday, 5 September 2026
-            </p>
-          </div>
-          <div className="flex items-center gap-3 sm:gap-5">
-            <label className="relative hidden md:block">
-              <span className="sr-only">Search opportunities</span>
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-                size={17}
-              />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search opportunities..."
-                className="h-10 w-56 rounded-xl border border-line bg-white pl-9 pr-3 text-sm outline-none transition placeholder:text-[#a3a49e] focus:border-coral lg:w-64"
-              />
-            </label>
-            <StudentNotifications />
-            <div className="flex items-center gap-2 border-l border-line pl-3 sm:pl-5">
-              <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9d4c8] font-display text-xs font-bold">
-                AS
-              </div>
-              <span className="hidden text-sm font-semibold sm:block">
-                Aarav Sharma
-              </span>
-              <ChevronDown size={14} />
-            </div>
-          </div>
-        </header>
-        <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-11 lg:py-10">
-          {children}
-        </div>
-      </main>
-    </div>
-  );
-}
+
 
 function OpportunityCard({
   opportunity,
@@ -412,7 +255,7 @@ function OpportunityCard({
             className={`rounded-md px-2 py-1 text-[0.68rem] font-medium ${opportunity.missing.includes(skill) ? "bg-[#f9e9e9] text-[#ad6568]" : "bg-[#e9f0e8] text-olive"}`}
           >
             {skill}
-            {opportunity.missing.includes(skill) && " · build"}
+            {opportunity.missing.includes(skill) && " Â· build"}
           </span>
         ))}
       </div>
@@ -435,9 +278,7 @@ function OpportunityCard({
 }
 
 export default function OpportunitiesPage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState("All");
+    const [filter, setFilter] = useState("All");
   const [sort, setSort] = useState("Best Match");
   const [selected, setSelected] = useState<Opportunity | null>(null);
   const filtered = useMemo(
@@ -445,12 +286,9 @@ export default function OpportunitiesPage() {
       [...opportunities]
         .filter(
           (item) =>
-            (filter === "All" ||
-              item.type === filter ||
-              item.mode === filter) &&
-            `${item.company} ${item.role} ${item.skills.join(" ")}`
-              .toLowerCase()
-              .includes(query.toLowerCase()),
+            filter === "All" ||
+            item.type === filter ||
+            item.mode === filter,
         )
         .sort((a, b) =>
           sort === "Newest"
@@ -459,16 +297,11 @@ export default function OpportunitiesPage() {
               ? a.days - b.days
               : b.match - a.match,
         ),
-    [filter, query, sort],
+    [filter, sort],
   );
   const featured = opportunities[0];
   return (
-    <Shell
-      menuOpen={menuOpen}
-      setMenuOpen={setMenuOpen}
-      query={query}
-      setQuery={setQuery}
-    >
+    <StudentLayout>
       <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p className="eyebrow">Your opportunity feed</p>
@@ -493,7 +326,7 @@ export default function OpportunitiesPage() {
               {featured.role}
             </h2>
             <p className="mt-2 text-sm font-semibold text-[#d0d5cd]">
-              {featured.company} · {featured.type} · {featured.mode}
+              {featured.company} Â· {featured.type} Â· {featured.mode}
             </p>
             <p className="mt-4 max-w-lg text-sm leading-6 text-[#b3b8b0]">
               {featured.reason} Your verified skills put you in the top tier of
@@ -632,7 +465,7 @@ export default function OpportunitiesPage() {
                   {selected.role}
                 </h2>
                 <p className="mt-2 text-sm text-muted">
-                  {selected.type} · {selected.location} · {selected.mode}
+                  {selected.type} Â· {selected.location} Â· {selected.mode}
                 </p>
               </div>
               <button
@@ -679,6 +512,10 @@ export default function OpportunitiesPage() {
           </div>
         </div>
       )}
-    </Shell>
+    </StudentLayout>
   );
 }
+
+
+
+

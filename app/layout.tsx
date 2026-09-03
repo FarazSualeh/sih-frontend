@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SkillConnect | Student Dashboard",
-  description: "Your skills, opportunities and career momentum in one place.",
+  title: "SkillConnect | Bridge skills and opportunity",
+  description: "A skills-first ecosystem connecting learners, institutions and industry.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

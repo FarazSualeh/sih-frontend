@@ -51,7 +51,7 @@ export type QuickAction = {
 };
 
 export const roleOptions: Array<{ value: RoleKey; label: string; route: string }> = [
-  { value: "student", label: "Student", route: "/" },
+  { value: "student", label: "Student", route: "/student-dashboard" },
   { value: "admin", label: "Admin", route: "/admin" },
 ];
 

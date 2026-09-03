@@ -38,7 +38,7 @@ import {
 const Github = Code2;
 
 const navigation = [
-  ["Dashboard", "/"],
+  ["Dashboard", "/student-dashboard"],
   ["My Skills", "/skills"],
   ["Assessments", "/assessments"],
   ["Opportunities", "/opportunities"],

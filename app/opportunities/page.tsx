@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 const navigation = [
-  ["Dashboard", "/"],
+  ["Dashboard", "/student-dashboard"],
   ["My Skills", "/skills"],
   ["Assessments", "/assessments"],
   ["Opportunities", "/opportunities"],

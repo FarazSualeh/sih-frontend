@@ -115,12 +115,12 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
 }
 
 const navigation = [
-  ["Dashboard", "grid", "/"],
+  ["Dashboard", "grid", "/student-dashboard"],
   ["My Skills", "spark", "/skills"],
   ["Assessments", "clipboard", "/assessments"],
   ["Opportunities", "briefcase", "/opportunities"],
-  ["Applications", "file", "#"],
-  ["Portfolio", "user", "#"],
+  ["Applications", "file", "/applications"],
+  ["Portfolio", "user", "/portfolio"],
 ] as const;
 
 type Assessment = {

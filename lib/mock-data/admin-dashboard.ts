@@ -48,10 +48,11 @@ export type PlatformActivityRow = {
 
 export type QuickAction = {
   label: string;
+  href?: string;
 };
 
 export const roleOptions: Array<{ value: RoleKey; label: string; route: string }> = [
-  { value: "student", label: "Student", route: "/student-dashboard" },
+  { value: "student", label: "Student", route: "/student" },
   { value: "admin", label: "Admin", route: "/admin" },
 ];
 
@@ -92,11 +93,11 @@ export const platformActivity: PlatformActivityRow[] = [
 ];
 
 export const quickActions: QuickAction[] = [
-  { label: "Verify Industries" },
-  { label: "Review Opportunities" },
-  { label: "Add New Skill" },
-  { label: "Create Assessment" },
-  { label: "Generate Report" },
+  { label: "Verify Industries", href: "/admin/opportunities" },
+  { label: "Review Opportunities", href: "/admin/opportunities" },
+  { label: "Add New Skill", href: "/admin/skills" },
+  { label: "Create Assessment", href: "/admin/assessments?create=true" },
+  { label: "Generate Report", href: "/admin/reports" },
 ];
 
 export const adminSummary = {

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowUpRight, BellRing, ChartNoAxesCombined, ClipboardCheck, Sparkles } from "lucide-react";
 
 import { KpiCard } from "@/components/admin/kpi-card";
@@ -85,12 +86,21 @@ export default function AdminDashboardPage() {
             <CardTitle className="mt-2">Admin tools</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {quickActions.map((action) => (
-              <Button key={action.label} variant="secondary" className="w-full justify-between">
-                <span>{action.label}</span>
-                <ArrowUpRight className="h-4 w-4" />
-              </Button>
-            ))}
+            {quickActions.map((action) => {
+              const content = (
+                <Button variant="secondary" className="w-full justify-between">
+                  <span>{action.label}</span>
+                  <ArrowUpRight className="h-4 w-4" />
+                </Button>
+              );
+              return action.href ? (
+                <Link key={action.label} href={action.href} className="block">
+                  {content}
+                </Link>
+              ) : (
+                <div key={action.label}>{content}</div>
+              );
+            })}
           </CardContent>
         </Card>
       </section>

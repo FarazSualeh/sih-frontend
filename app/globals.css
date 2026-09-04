@@ -1,50 +1,179 @@
 @import "tailwindcss";
 
+/* ────────────────────────────────────────────────
+   Design tokens — light mode (default)
+──────────────────────────────────────────────── */
 :root {
-  --background: #f8f8f5;
-  --foreground: #232b26;
-  /* Academician & Industry dashboard variables */
-  --bg: #f5efe8;
-  --panel: #fffaf5;
-  --panel-alt: #edf3ee;
-  --card: #f2efe9;
-  --charcoal: #1a2927;
+  --background:  #f8f8f5;
+  --foreground:  #232b26;
+
+  /* Surface scale */
+  --surface-1:   #ffffff;
+  --surface-2:   #f5f5f2;
+  --surface-3:   #eef0ea;
+
+  /* Semantic colours */
+  --ink:         #232b26;
+  --muted:       #7a817a;
+  --line:        #e5e6df;
+
+  /* Academician / Industry dashboard tokens */
+  --bg:          #f5efe8;
+  --panel:       #fffaf5;
+  --panel-alt:   #edf3ee;
+  --card:        #f2efe9;
+  --charcoal:    #1a2927;
   --charcoal-soft: #223834;
-  --sage: #d9e7dc;
-  --yellow: #f4e5b8;
-  --accent: #ef6d52;
+  --sage:        #d9e7dc;
+  --yellow:      #f4e5b8;
+  --accent:      #ef6d52;
   --accent-strong: #d95b42;
-  --border: rgba(28, 41, 39, 0.09);
-  --muted: #60706a;
+  --border:      rgba(28, 41, 39, 0.09);
 }
 
+/* ────────────────────────────────────────────────
+   Design tokens — dark mode
+──────────────────────────────────────────────── */
+.dark {
+  --background:  #0d1117;
+  --foreground:  #e6edf3;
+
+  /* Surface scale */
+  --surface-1:   #161b22;
+  --surface-2:   #1c2128;
+  --surface-3:   #22272e;
+
+  /* Semantic colours */
+  --ink:         #e6edf3;
+  --muted:       #7d8590;
+  --line:        rgba(240, 246, 252, 0.10);
+
+  /* Academician / Industry dashboard tokens */
+  --bg:          #0d1117;
+  --panel:       #161b22;
+  --panel-alt:   #1c2128;
+  --card:        #161b22;
+  --charcoal:    #e6edf3;
+  --charcoal-soft: #cdd9e5;
+  --sage:        #1a3a2a;
+  --yellow:      #2d2400;
+  --border:      rgba(240, 246, 252, 0.10);
+}
+
+/* ────────────────────────────────────────────────
+   Tailwind v4 theme — wire tokens to CSS variables
+   so every Tailwind utility (bg-white, text-ink …)
+   automatically adapts to the active colour scheme.
+──────────────────────────────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* white / slate overrides — point to surface scale */
+  --color-white:       var(--surface-1);
+  --color-slate-50:    var(--surface-2);
+  --color-slate-100:   var(--surface-3);
+  --color-slate-200:   var(--surface-3);
+
+  /* semantic */
+  --color-ink:    var(--ink);
+  --color-muted:  var(--muted);
+  --color-line:   var(--line);
+
+  /* brand palette — unchanged in both themes */
+  --color-coral:  #e4624e;
+  --color-olive:  #6c815d;
+  --color-sky:    #78a8c7;
+  --color-gold:   #d5a84c;
+  --color-rose:   #c98689;
+
+  --font-sans:    var(--font-geist-sans);
+  --font-mono:    var(--font-geist-mono);
   --font-display: var(--font-geist-sans);
-  --color-ink: #232b26;
-  --color-muted: #7a817a;
-  --color-line: #e5e6df;
-  --color-coral: #e4624e;
-  --color-olive: #6c815d;
-  --color-sky: #78a8c7;
-  --color-gold: #d5a84c;
-  --color-rose: #c98689;
+}
+
+/* ────────────────────────────────────────────────
+   Base styles
+──────────────────────────────────────────────── */
+html {
+  background: var(--background);
+  color:      var(--foreground);
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background:  var(--background);
+  color:       var(--foreground);
   font-family: var(--font-geist-sans), sans-serif;
 }
 
 button, input { font: inherit; }
 button { cursor: pointer; }
+
+/* ────────────────────────────────────────────────
+   Hardcoded-hex overrides for dark mode
+   (covers components that embed literal colours)
+──────────────────────────────────────────────── */
+
+/* Page / layout backgrounds */
+.dark .bg-\[\#f8f8f5\]   { background-color: var(--background)    !important; }
+.dark .bg-\[\#fbfbf8\]   { background-color: var(--surface-1)     !important; }
+.dark .bg-\[\#f5f5f2\]   { background-color: var(--surface-2)     !important; }
+.dark .bg-\[\#eef0ea\]   { background-color: var(--surface-3)     !important; }
+.dark .bg-\[\#eaece7\]   { background-color: var(--surface-3)     !important; }
+.dark .bg-\[\#f4f5f0\]   { background-color: var(--surface-3)     !important; }
+.dark .bg-\[\#e9f0e8\]   { background-color: #1e3a2f              !important; }
+
+/* Backdrop / blur navbar */
+.dark .bg-\[\#fbfbf8\]\/80  { background-color: rgba(22,27,34,0.80) !important; }
+.dark .supports-\[backdrop-filter\]\:bg-\[\#fbfbf8\]\/75 { background-color: rgba(22,27,34,0.75) !important; }
+
+/* Borders */
+.dark .border-\[\#e5e6df\] { border-color: var(--line) !important; }
+
+/* Text */
+.dark .text-\[\#232b26\]  { color: var(--ink)  !important; }
+.dark .text-\[\#7a817a\]  { color: var(--muted) !important; }
+
+/* Sidebar hover */
+.dark .hover\:bg-\[\#eef0ea\]:hover { background-color: var(--surface-3) !important; }
+.dark .hover\:bg-\[\#f5f5f2\]:hover { background-color: var(--surface-2) !important; }
+.dark .hover\:bg-\[\#f4f5f0\]:hover { background-color: var(--surface-3) !important; }
+
+/* Sidebar collapse button */
+.dark .border-line { border-color: var(--line)   !important; }
+.dark .bg-white     { background-color: var(--surface-1) !important; }
+.dark .text-ink     { color: var(--ink)          !important; }
+.dark .text-muted   { color: var(--muted)        !important; }
+
+/* Input fields */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: var(--surface-2) !important;
+  color:            var(--ink)       !important;
+  border-color:     var(--line)      !important;
+}
+
+/* Shadows — tone down for dark */
+.dark .shadow-sm  { box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
+.dark .shadow-md  { box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important; }
+.dark .shadow-lg  { box-shadow: 0 8px 24px rgba(0,0,0,0.7) !important; }
+
+/* Indigo tints → dark equivalents */
+.dark .bg-indigo-50  { background-color: #1e2a4a !important; }
+.dark .bg-slate-900  { background-color: #0d1117 !important; }
+
+/* Tables */
+.dark thead.border-b { border-color: var(--line) !important; }
+.dark .bg-slate-50   { background-color: var(--surface-2) !important; }
+
+/* ────────────────────────────────────────────────
+   Legacy named helpers (kept for backwards compat)
+──────────────────────────────────────────────── */
 .eyebrow { color: #8b918b; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.16em; line-height: 1; text-transform: uppercase; }
 .bg-coral { background-color: #e4624e; }
 .bg-olive { background-color: #6c815d; }
-.bg-sky { background-color: #78a8c7; }
-.bg-gold { background-color: #d5a84c; }
-.bg-rose { background-color: #c98689; }
+.bg-sky   { background-color: #78a8c7; }
+.bg-gold  { background-color: #d5a84c; }
+.bg-rose  { background-color: #c98689; }

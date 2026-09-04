@@ -157,7 +157,7 @@ export default function IndustryDemandPage() {
                   <div className="mt-3 flex gap-2">
                     <a href={`/academician/students?skill=${encodeURIComponent(row.skill)}`} className="rounded bg-sky-600 px-3 py-1.5 text-xs text-white hover:bg-sky-700">View Students</a>
                     <button onClick={() => setSelectedSkill(row.skill)} className="rounded bg-slate-100 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-200">Recommend Training</button>
-                    <a href={`/academician/assessments?skill=${encodeURIComponent(row.skill)}`} className="rounded bg-emerald-100 px-3 py-1.5 text-xs text-emerald-700 hover:bg-emerald-200">Create Assessment</a>
+                    <a href={`/academician/assessments?skill=${encodeURIComponent(row.skill)}`} className="rounded border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-medium text-sky-700 hover:bg-sky-100">View Assessments</a>
                   </div>
                 </div>
               ))}

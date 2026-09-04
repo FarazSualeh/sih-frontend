@@ -27,12 +27,12 @@ const navigation: {
   href: string;
   badge?: string;
 }[] = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/student-dashboard" },
-  { label: "My Skills", icon: Zap, href: "/skills" },
-  { label: "Assessments", icon: ClipboardList, href: "/assessments" },
-  { label: "Opportunities", icon: Briefcase, href: "/opportunities", badge: "12" },
-  { label: "Applications", icon: FileText, href: "/applications" },
-  { label: "Portfolio", icon: User, href: "/portfolio" },
+  { label: "Dashboard", icon: LayoutDashboard, href: "/student" },
+  { label: "My Skills", icon: Zap, href: "/student/skills" },
+  { label: "Assessments", icon: ClipboardList, href: "/student/assessments" },
+  { label: "Opportunities", icon: Briefcase, href: "/student/opportunities", badge: "12" },
+  { label: "Applications", icon: FileText, href: "/student/applications" },
+  { label: "Portfolio", icon: User, href: "/student/portfolio" },
 ];
 
 export function StudentLayout({ children }: { children: ReactNode }) {
@@ -97,7 +97,10 @@ export function StudentLayout({ children }: { children: ReactNode }) {
           {!collapsed && <p className="eyebrow mb-3 px-3">Workspace</p>}
           <nav className="space-y-1">
             {navigation.map(({ label, icon: Icon, href, badge }) => {
-              const isActive = pathname === href;
+              const isActive =
+                pathname === href ||
+                (href === "/student" && (pathname === "/student" || pathname === "/student-dashboard" || pathname === "/dashboard")) ||
+                (href !== "/student" && pathname.startsWith(href));
               return (
                 <Link
                   key={label}

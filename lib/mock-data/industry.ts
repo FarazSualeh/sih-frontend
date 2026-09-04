@@ -238,7 +238,7 @@ export function calculateCandidateMatch(
   let finalScore = Math.round(reqRatio * 75 + prefRatio * 25);
   finalScore = Math.min(Math.max(finalScore, 40), 99);
 
-  const reqSummaryNote = `âœ“ ${requiredMetCount}/${requiredReqs.length} required skills met`;
+  const reqSummaryNote = `${requiredMetCount}/${requiredReqs.length} required skills met`;
   positiveNotes.unshift(reqSummaryNote);
 
   return {
@@ -266,7 +266,7 @@ export const initialApplications: CandidateApplication[] = [
       score: 94,
       requiredMetCount: 2,
       requiredTotalCount: 2,
-      positiveNotes: ['âœ“ 2/2 required skills met', 'Strong Python proficiency (94%)', 'Strong SQL proficiency (92%)', 'Has preferred skill: React (88%)'],
+      positiveNotes: ['2/2 required skills met', 'Strong Python proficiency (94%)', 'Strong SQL proficiency (92%)', 'Has preferred skill: React (88%)'],
       gapNotes: ['AWS needs improvement']
     },
     topSkills: [
@@ -294,7 +294,7 @@ export const initialApplications: CandidateApplication[] = [
       score: 87,
       requiredMetCount: 2,
       requiredTotalCount: 2,
-      positiveNotes: ['âœ“ 2/2 required skills met', 'Strong Python proficiency (90%)', 'SQL skills verified (86%)', 'Has preferred skill: React (82%)'],
+      positiveNotes: ['2/2 required skills met', 'Strong Python proficiency (90%)', 'SQL skills verified (86%)', 'Has preferred skill: React (82%)'],
       gapNotes: ['AWS (preferred) needs upskilling']
     },
     topSkills: [
@@ -320,7 +320,7 @@ export const initialApplications: CandidateApplication[] = [
       score: 79,
       requiredMetCount: 2,
       requiredTotalCount: 2,
-      positiveNotes: ['âœ“ 2/2 required skills met', 'Python skills verified (85%)', 'SQL skills verified (80%)'],
+      positiveNotes: ['2/2 required skills met', 'Python skills verified (85%)', 'SQL skills verified (80%)'],
       gapNotes: ['React level is basic (50%) - needs improvement', 'AWS (preferred) needs upskilling']
     },
     topSkills: [
@@ -345,7 +345,7 @@ export const initialApplications: CandidateApplication[] = [
       score: 92,
       requiredMetCount: 2,
       requiredTotalCount: 2,
-      positiveNotes: ['âœ“ 2/2 required skills met', 'Strong Python proficiency (95%)', 'Strong SQL proficiency (90%)'],
+      positiveNotes: ['2/2 required skills met', 'Strong Python proficiency (95%)', 'Strong SQL proficiency (90%)'],
       gapNotes: ['AWS cloud certification pending']
     },
     topSkills: [
@@ -370,7 +370,7 @@ export const initialApplications: CandidateApplication[] = [
       score: 84,
       requiredMetCount: 1,
       requiredTotalCount: 2,
-      positiveNotes: ['âœ“ 1/2 required skills met', 'Python proficiency (88%)'],
+      positiveNotes: ['1/2 required skills met', 'Python proficiency (88%)'],
       gapNotes: ['AWS knowledge in training']
     },
     topSkills: [

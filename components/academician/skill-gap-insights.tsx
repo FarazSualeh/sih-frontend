@@ -137,7 +137,7 @@ export default function SkillGapInsights({ gaps }: { gaps: SkillGap[] }) {
 
                   <div className="mb-3 flex flex-wrap gap-2">
                     <a href={`/academician/students?skill=${encodeURIComponent(g.name)}`} className="rounded border border-sky-200 px-2.5 py-1 text-xs font-medium text-sky-700 hover:bg-sky-100">View Students</a>
-                    <a href={`/academician/assessments?skill=${encodeURIComponent(g.name)}`} className="rounded border border-sky-200 px-2.5 py-1 text-xs font-medium text-sky-700 hover:bg-sky-100">Create Assessment</a>
+                    <a href={`/academician/assessments?skill=${encodeURIComponent(g.name)}`} className="rounded border border-sky-200 px-2.5 py-1 text-xs font-medium text-sky-700 hover:bg-sky-100">View Assessments</a>
                     <a href="#learning-videos" className="rounded border border-sky-200 px-2.5 py-1 text-xs font-medium text-sky-700 hover:bg-sky-100">View Videos</a>
                   </div>
 

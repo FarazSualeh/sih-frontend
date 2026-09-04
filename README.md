@@ -1,76 +1,177 @@
 # SkillConnect
 
-SkillConnect is the frontend for the SIH 2026 solution to **Problem Statement 44: Portal for Academia-Industry Collaboration for Skill Mapping, Internships and Placement**.
+**SIH 2026 · Problem Statement 44 — Portal for Academia-Industry Collaboration for Skill Mapping, Internships and Placement**
 
-The platform is designed to connect students, industries, academicians and institutions through verified skills, targeted assessments, skill-gap insights, internship opportunities and application tracking.
+SkillConnect is a multi-role platform that bridges students, academicians, industry partners and administrators through verified skill profiles, centrally-governed assessments, skill-gap diagnostics, internship / placement opportunities and structured industry feedback.
 
-## Current Frontend
-
-The current experience is a responsive student workspace built with Next.js, TypeScript and Tailwind CSS. It includes:
-
-- Student dashboard with skill readiness, progress snapshots and opportunity matches
-- My Skills view with categorized skill cards, verification states and skill-gap actions
-- Chart.js readiness doughnut and technical skill radar visualizations
-- Assessments overview with available, in-progress and completed states
-- Mock assessment flow: overview, multiple-choice questions, progress, submission and results
-- Responsive sidebar navigation and mobile menu behavior
-
-All displayed data is realistic mock data for the frontend phase. Backend APIs, authentication, Supabase, AI/ML recommendations and persistent assessment results are intentionally not implemented yet.
+---
 
 ## Tech Stack
 
-- Next.js 16 App Router
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- Chart.js with `react-chartjs-2` (for Data Visualization)
-- ESLint
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| Charts | Chart.js + `react-chartjs-2` |
+| Icons | Lucide React |
+| Linter | ESLint |
+| Containerisation | Docker (Dockerfile included) |
+
+All data is realistic **mock data** for the current frontend phase. Backend APIs, authentication, Supabase, AI/ML recommendations and persistent storage are intentionally not implemented yet.
+
+---
 
 ## Getting Started
 
-Install dependencies:
-
 ```bash
+# Install dependencies
 npm install
-```
 
-Start the development server:
-
-```bash
+# Start the development server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in a browser.
 
-## Available Scripts
+### Available Scripts
 
 ```bash
-npm run dev       # Start the development server
-npm run lint      # Run ESLint
-npm run build     # Create a production build
-npm run start     # Start the production server
+npm run dev     # Development server (hot-reload)
+npm run build   # Production build
+npm run start   # Serve production build
+npm run lint    # ESLint check
 ```
 
-## Frontend Routes
+### Docker
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Student dashboard |
-| `/skills` | Skill profile, readiness and skill gaps |
-| `/assessments` | Assessment library and assessment-taking flow |
+```bash
+docker build -t skillconnect .
+docker run -p 3000:3000 skillconnect
+```
+
+---
+
+## Roles & Routes
+
+### 🏠 Landing / Auth
+| Route | Description |
+|---|---|
+| `/` | Public landing page |
+| `/login` | Login page (role selector) |
+
+---
+
+### 🎓 Student (`/student/*`)
+| Route | Description |
+|---|---|
+| `/student` | Student dashboard — readiness scores, skill snapshots, opportunity matches |
+| `/student/skills` | My Skills — categorised skill cards, verification states, skill-gap actions |
+| `/student/assessments` | Assessment library — available, in-progress, completed |
+| `/student/opportunities` | Internship & placement listings with filters |
+| `/student/applications` | Application tracker with status timeline |
+| `/student/portfolio` | Portfolio builder — projects, certifications, achievements |
+
+> Legacy student routes (`/dashboard`, `/skills`, `/assessments`, `/opportunities`, `/applications`, `/portfolio`) are also present for backward compatibility.
+
+---
+
+### 👩‍🏫 Academician (`/academician/*`)
+| Route | Description |
+|---|---|
+| `/academician` | Academician dashboard — cohort overview, skill gaps, alerts |
+| `/academician/assessments` | Assessment Insights — view admin-published assessments, benchmark analytics, student skill-gap monitoring |
+| `/academician/students` | Student roster — readiness, progress and skill-gap breakdown |
+| `/academician/skill-gaps` | Skill gap analysis — cohort vs. industry demand heatmaps |
+| `/academician/industry-demand` | Live industry demand signals mapped to curriculum |
+| `/academician/opportunities` | Placement & internship listings relevant to cohort |
+| `/academician/analytics` | Department performance analytics and trend charts |
+| `/academician/reports` | Downloadable placement and skill reports |
+| `/academician/profile` | Academician profile settings |
+
+> **Assessment creation is centralised under Admin** to maintain standardised skill benchmarking. Academicians have a dedicated Insights view to monitor and address student skill gaps.
+
+---
+
+### 🏢 Industry (`/industry/*`)
+| Route | Description |
+|---|---|
+| `/industry` | Industry dashboard — talent pool, pipeline stats, recent applications |
+| `/industry/opportunities` | Manage posted opportunities (internships, full-time, projects) |
+| `/industry/post-opportunity` | Create a new opportunity listing |
+| `/industry/candidates` | Browse verified student profiles with skill filters |
+| `/industry/talent-matches` | AI-matched talent recommendations |
+| `/industry/applications` | Manage received applications |
+| `/industry/shortlisted` | Shortlisted candidates pipeline |
+| `/industry/analytics` | Hiring funnel and skill demand analytics |
+| `/industry/feedback` | Provide structured skill feedback to the platform |
+| `/industry/profile` | Company profile and branding |
+| `/industry/settings` | Industry account settings |
+
+---
+
+### 🛡️ Admin (`/admin/*`)
+| Route | Description |
+|---|---|
+| `/admin` | Admin dashboard — platform KPIs, quick actions, alerts |
+| `/admin/assessments` | Assessment Management — create, publish, manage Q&A library, monitor participation |
+| `/admin/users` | User management — students, academicians, industry users |
+| `/admin/skills` | Skill catalogue — verified skills, categories, demand mapping |
+| `/admin/opportunities` | Platform-wide opportunity oversight |
+| `/admin/applications` | All-applications view with status management |
+| `/admin/analytics` | Platform-wide analytics and trend reports |
+| `/admin/reports` | Export and schedule reports |
+| `/admin/settings` | Platform settings — institution config, roles & permissions, notifications, appearance (incl. **dark mode**) |
+
+---
 
 ## Project Structure
 
 ```text
 app/
-  page.tsx                 Student dashboard
-  skills/page.tsx          My Skills experience
-  assessments/page.tsx     Assessments experience
-  globals.css              Shared design tokens and global styles
-  layout.tsx               Root layout and metadata
-public/                    Static assets
+  page.tsx                    Public landing page
+  login/                      Login & role selection
+  student/                    Student role pages
+  academician/                Academician role pages
+  industry/                   Industry role pages
+  admin/                      Admin role pages
+  globals.css                 Design tokens, dark mode, global styles
+  layout.tsx                  Root layout & font loading
+
+components/
+  admin/                      Admin-specific components
+    assessments/              Assessment library, dialogs, table, Q&A manager
+    settings/                 Institution form, notifications, role permissions
+    shared/                   Global search, notification panel, confirmation dialog
+  academician/                Academician-specific components
+  industry/                   Industry-specific components
+  ui/                         Shared primitives (Button, Card, Badge, Input, Dialog …)
+
+lib/
+  mock-data/                  Typed mock datasets for all roles
+  utils.ts                    Shared utility functions
+
+public/                       Static assets
 ```
 
-## Product Direction
+---
 
-SkillConnect will eventually support API-backed skill profiles, institution and industry workflows, verified assessment records, internship and job matching, application tracking and structured industry feedback. The current frontend keeps these boundaries data-driven so real services can be connected without redesigning the user experience.
+## Key Design Decisions
+
+| Decision | Rationale |
+|---|---|
+| **Centralised assessment creation (Admin only)** | Ensures standardised skill benchmarking and prevents inflated assessments; academicians get rich insight views instead |
+| **CSS-variable-driven dark mode** | Tailwind v4 `@theme` tokens are wired to CSS custom properties that flip under `.dark`, so every utility class adapts automatically without rebuild |
+| **Mock data first** | All pages are fully functional with typed mock data, making it trivial to swap in real API responses |
+| **Role-based layouts** | Each role (`/admin`, `/academician`, `/industry`, `/student`) has its own layout, sidebar and navbar — no shared shell |
+
+---
+
+## Product Roadmap
+
+- [ ] Supabase / PostgreSQL backend integration
+- [ ] Role-based authentication (Supabase Auth)
+- [ ] Real assessment engine with timed attempts and result persistence (somewhat done)
+- [ ] AI/ML skill-gap recommendations and talent matching
+- [ ] Email / push notification delivery
+- [ ] Industry feedback loop feeding curriculum suggestions

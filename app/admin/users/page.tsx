@@ -151,7 +151,7 @@ export default function AdminUsersPage() {
         </div>
       ) },
     { key: "studentsMentored", label: "Mentored", render: (row: Academician) => <span>{row.studentsMentored}</span> },
-    { key: "assessmentsCreated", label: "Assessments", render: (row: Academician) => <span>{row.assessmentsCreated}</span> },
+    { key: "assessmentsCreated", label: "Evaluated", render: (row: Academician) => <span>{row.assessmentsCreated}</span> },
     { key: "accessLevel", label: "Access", render: (row: Academician) => <StatusBadge status={row.accessLevel} /> },
     { key: "status", label: "Status", render: (row: Academician) => <StatusBadge status={row.status} /> },
   ];
@@ -359,7 +359,7 @@ export default function AdminUsersPage() {
                 <p className="mt-2 text-2xl font-semibold text-slate-900">{selectedAcademician.studentsMentored}</p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs uppercase tracking-[0.12em] text-slate-500">Assessments</p>
+                <p className="text-xs uppercase tracking-[0.12em] text-slate-500">Evaluated Tests</p>
                 <p className="mt-2 text-2xl font-semibold text-slate-900">{selectedAcademician.assessmentsCreated}</p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">

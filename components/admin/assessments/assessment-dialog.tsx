@@ -1,7 +1,72 @@
 "use client";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AssessmentStatusBadge } from "@/components/admin/assessments/assessment-status-badge";
 import type { Assessment } from "@/lib/mock-data/assessments";
-export function AssessmentDialog({ assessment, open, onOpenChange, onAction }: { assessment?: Assessment; open: boolean; onOpenChange: (open: boolean) => void; onAction: (action: string) => void }) { if (!assessment) return null; return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl"><DialogHeader><div className="flex items-start justify-between gap-3"><div><DialogTitle>{assessment.title}</DialogTitle><DialogDescription>{assessment.category} · {assessment.skill}</DialogDescription></div><AssessmentStatusBadge status={assessment.status} /></div></DialogHeader><div className="space-y-5 text-sm"><p className="leading-6 text-muted">{assessment.description}</p><div className="grid gap-3 sm:grid-cols-4">{[["Difficulty", assessment.difficulty], ["Duration", `${assessment.duration} min`], ["Passing marks", `${assessment.passingMarks}%`], ["Attempts", assessment.attemptsAllowed.toString()]].map(([label, value]) => <div key={label} className="rounded-xl bg-slate-50 p-3"><p className="text-xs text-muted">{label}</p><p className="mt-1 font-semibold text-ink">{value}</p></div>)}</div><Info title="Assessment setup"><p>{assessment.questions} questions · Created by {assessment.createdBy}</p><p className="mt-1 text-muted">Assigned departments: {assessment.assignedDepartments.join(", ")}</p><p className="mt-1 text-muted">Assigned students: {assessment.assignedStudents.toLocaleString()}</p></Info><Info title="Performance"><div className="grid gap-3 sm:grid-cols-3"><span>Completion <strong>{assessment.completionRate}%</strong></span><span>Average score <strong>{assessment.averageScore}%</strong></span><span>Top performer <strong>{assessment.topPerformers[0]}</strong></span></div></Info><Info title="Top performers"><p className="text-muted">{assessment.topPerformers.join(" · ")}</p></Info></div><DialogFooter><Button variant="outline" onClick={() => onAction("Duplicate")}>Duplicate Assessment</Button><Button variant="outline" onClick={() => onAction("Archive")}>Archive Assessment</Button><Button onClick={() => onAction("Edit")}>Edit Assessment</Button></DialogFooter></DialogContent></Dialog>; }
-function Info({ title, children }: { title: string; children: React.ReactNode }) { return <div><p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">{title}</p><div className="mt-2 text-ink">{children}</div></div>; }
+
+export function AssessmentDialog({
+  assessment,
+  open,
+  onOpenChange,
+}: {
+  assessment?: Assessment;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAction?: (action: string) => void;
+}) {
+  if (!assessment) return null;
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogHeader>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <DialogTitle>{assessment.title}</DialogTitle>
+              <DialogDescription>{assessment.category} · {assessment.skill}</DialogDescription>
+            </div>
+            <AssessmentStatusBadge status={assessment.status} />
+          </div>
+        </DialogHeader>
+        <div className="space-y-5 text-sm">
+          <p className="leading-6 text-muted">{assessment.description}</p>
+          <div className="grid gap-3 sm:grid-cols-4">
+            {[
+              ["Difficulty", assessment.difficulty],
+              ["Duration", `${assessment.duration} min`],
+              ["Passing marks", `${assessment.passingMarks}%`],
+              ["Attempts", assessment.attemptsAllowed.toString()],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-xl bg-slate-50 p-3">
+                <p className="text-xs text-muted">{label}</p>
+                <p className="mt-1 font-semibold text-ink">{value}</p>
+              </div>
+            ))}
+          </div>
+          <Info title="Assessment setup">
+            <p>{assessment.questions} questions · Created by {assessment.createdBy}</p>
+            <p className="mt-1 text-muted">Assigned departments: {assessment.assignedDepartments.join(", ")}</p>
+            <p className="mt-1 text-muted">Assigned students: {assessment.assignedStudents.toLocaleString()}</p>
+          </Info>
+          <Info title="Performance">
+            <div className="grid gap-3 sm:grid-cols-3">
+              <span>Completion <strong>{assessment.completionRate}%</strong></span>
+              <span>Average score <strong>{assessment.averageScore}%</strong></span>
+              <span>Top performer <strong>{assessment.topPerformers[0]}</strong></span>
+            </div>
+          </Info>
+          <Info title="Top performers">
+            <p className="text-muted">{assessment.topPerformers.join(" · ")}</p>
+          </Info>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function Info({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">{title}</p>
+      <div className="mt-2 text-ink">{children}</div>
+    </div>
+  );
+}

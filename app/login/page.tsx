@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 const demoAccounts = [
-  ["student123@gmail.com", "Student", "/student-dashboard"],
+  ["student123@gmail.com", "Student", "/student"],
   ["admin123@gmail.com", "Admin", "/admin"],
   ["academician@gmail.com", "Academician", "/academician"],
   ["industry@gmail.com", "Industry", "/industry"],
@@ -82,7 +82,7 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
-        <p className="text-xs text-[#7f887f]">SkillConnect · SIH PS44</p>
+        <p className="text-xs text-[#7f887f]">SkillConnect</p>
         <div className="absolute -bottom-32 -right-16 h-72 w-72 rounded-full border border-white/10" />
       </section>
       <section className="flex items-center justify-center px-5 py-10 sm:px-8">
@@ -134,7 +134,7 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
-                    placeholder="Any non-empty password"
+                    placeholder="Your password"
                     className="mt-2"
                   />
                 </label>
@@ -183,7 +183,7 @@ export default function LoginPage() {
             </CardContent>
           </Card>
           <p className="mt-5 text-center text-xs text-muted">
-            Prototype mode · Any non-empty password is accepted.
+            Prototype mode · Your password is accepted.
           </p>
         </div>
       </section>
